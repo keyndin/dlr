@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=dlf
+GenericName=Deutschland Funk Radio
+Comment=Deutschland Funk Radio Client
+Categories=Utility;Education;
+Exec=com.github.keyndin.dlf
+Icon=application-default-icon
+Terminal=false
+Type=Application
+Keywords=DLF;Radio;
