@@ -5,6 +5,8 @@
     executable(
         meson.project_name(),
         'src/Application.vala',
+        'src/DLF.vala',
+        'src/Station.vala',
         dependencies: [
             dependency('gtk+-3.0')
         ],
