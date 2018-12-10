@@ -32,7 +32,7 @@ public class MyApp : Gtk.Application {
         });
 
         grid.add(button_hello);
-        grid.attach_next_to(text, button_hello, Gtk.WindowPosition.BOTTOM);
+        grid.add(text);
 
 
         main_window.add(grid);
