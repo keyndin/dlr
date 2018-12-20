@@ -1,0 +1,5 @@
+build/
+.buildconfig
+.idea/
+data/#*#
+*~
