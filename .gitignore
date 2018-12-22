@@ -1,7 +1,7 @@
 build/
 .buildconfig
 .idea/
-data/#*#
+src/#*#
 *~
 dlr.sublime-project
 dlr.sublime-workspace
