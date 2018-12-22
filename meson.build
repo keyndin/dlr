@@ -28,8 +28,6 @@ executable(
     vala_args: [
         '--pkg=gtk+-3.0', 
         '--pkg=gmodule-2.0',
-        '--target-glib=2.50',
-        '--cc=-dynamic-export',
         ],
     dependencies: dlr_dependencies,
     install: true,
