@@ -1,36 +1,40 @@
-using Gtk;
+public class MainWindow : Gtk.Application {
 
-namespace dlr {
+    public string title {get; private set;}
 
-    public class MainWindow : Gtk.Application {
+    public MainWindow () {
+        Object (
+            application_id: "com.github.keyndin.dlr",
+            flags: ApplicationFlags.FLAGS_NONE
+        );
+    }
 
-        public string title {get; private set;}
+    protected override void activate () {
+        // Load UI from file
+        var builder = new Gtk.Builder.from_resource("/com/github/kendin/dlr/window.ui");
+        builder.connect_signals(this);
+        var window = builder.get_object ("main_window") as Gtk.Window;
 
-        public MainWindow () {
-            Object (
-                application_id: "com.github.keyndin.dlr",
-                flags: ApplicationFlags.FLAGS_NONE
-            );
-            this.title = "Project Aircheck";
-        }
+        // Load CSS
+        Gtk.CssProvider css_provider = new Gtk.CssProvider ();
+        css_provider.load_from_resource("/com/github/kendin/dlr/window.ui.css");
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), 
+            css_provider, 
+            Gtk.STYLE_PROVIDER_PRIORITY_USER
+        );
 
-        protected override void activate () {
-            // Load UI from file
-            var builder = new Builder .from_resource("/com/github/kendin/dlr/window.ui");
-            builder.connect_signals (null);
-            var window = builder.get_object ("main_window") as Window;
+        // Set title
+        window.title = "Project Aircheck";
 
-            // Load CSS
-            Gtk.CssProvider css_provider = new Gtk.CssProvider ();
-            css_provider.load_from_resource ("/com/github/kendin/dlr/window.ui.css");
-            Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default(), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
+        // Run window
+        window.show_all();
+        Gtk.main();
+    }
 
-            // Set title
-            window.set_title(this.title);
-
-            // Run window
-            window.show_all();
-            Gtk.main ();
-        }
+    [CCode (instance_pos = -1)]
+    public void on_dlrbutton_clicked(Gtk.Button sender)
+    {
+        sender.label = "test";
     }
 }
