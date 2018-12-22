@@ -20,6 +20,11 @@ namespace dlr {
             builder.connect_signals (null);
             var window = builder.get_object ("main_window") as Window;
 
+            // Load CSS
+            Gtk.CssProvider css_provider = new Gtk.CssProvider ();
+            css_provider.load_from_resource ("/com/github/kendin/dlr/window.ui.css");
+            Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default(), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
+
             // Set title
             window.set_title(this.title);
 

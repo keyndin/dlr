@@ -3,5 +3,6 @@
 <gresources>
   <gresource prefix="/com/github/kendin/dlr">
     <file>window.ui</file>
+    <file>window.ui.css</file>
   </gresource>
 </gresources>
