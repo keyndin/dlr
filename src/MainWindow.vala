@@ -32,9 +32,11 @@ public class MainWindow : Gtk.Application {
         Gtk.main();
     }
 
+    // Since Vala compiles to C, we want our instance variable set last
     [CCode (instance_pos = -1)]
     public void on_dlrbutton_clicked(Gtk.Button sender)
     {
+        // This function will be called when the "DLR" button gets clicked
         sender.label = "test";
     }
 }
