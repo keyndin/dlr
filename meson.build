@@ -17,7 +17,7 @@ dlr_dependencies = [
 
 dlr_sources += gnome.compile_resources(
         'dlr-resources',
-        'src/com.github.keyndin.dlr.gresource.xml',
+        'src/gresource.xml',
         source_dir: 'src'
 )
 
