@@ -20,3 +20,5 @@
 * Navigate into the projects source folder and execute ```meson build```.
 * cd into the generated build directory and execute ```ninja``` to compile the source files.
 * The project can be executed by running ```./com.github.keyndin.dlr``` 
+
+## Linux
