@@ -39,4 +39,11 @@ public class MainWindow : Gtk.Application {
         // This function will be called when the "DLR" button gets clicked
         sender.label = "test";
     }
+
+    [CCode (instance_pos = -1)]
+    public void on_destroy(Gtk.Button sender)
+    {
+        // This function will be called when the "DLR" button gets clicked
+        Gtk.main_quit();
+    }
 }

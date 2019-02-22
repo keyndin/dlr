@@ -50,6 +50,7 @@
     <property name="default_height">600</property>
     <property name="icon_name">audio-input-microphone</property>
     <property name="show_menubar">False</property>
+    <signal name="destroy" handler="main_window_on_destroy" swapped="no"/>
     <child type="titlebar">
       <placeholder/>
     </child>
@@ -157,7 +158,7 @@
             <property name="row_spacing">5</property>
             <property name="column_homogeneous">True</property>
             <child>
-              <object class="GtkButtonBox">
+              <object class="GtkButtonBox" id="media_controls">
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
                 <property name="can_focus">False</property>
@@ -168,6 +169,7 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="image">previous_icon</property>
+                    <property name="relief">none</property>
                     <property name="image_position">top</property>
                     <property name="always_show_image">True</property>
                   </object>
@@ -183,7 +185,7 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="image">play_icon</property>
-                    <property name="relief">half</property>
+                    <property name="relief">none</property>
                     <property name="image_position">top</property>
                     <property name="always_show_image">True</property>
                   </object>
@@ -199,6 +201,7 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="image">next_icon</property>
+                    <property name="relief">none</property>
                     <property name="image_position">top</property>
                     <property name="always_show_image">True</property>
                   </object>
