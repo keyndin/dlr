@@ -1,9 +1,10 @@
 using Gst;
 
-public class StreamPlayer {
+public class StreamPlayer:GLib.Object {
 
     private MainLoop loop = new MainLoop ();
     private dynamic Element player;
+    public State state { get; private set;}
 
     public StreamPlayer() {
     	player = ElementFactory.make ("playbin", "play");
@@ -53,25 +54,32 @@ public class StreamPlayer {
         default:
             break;
         }
-
         return true;
     }
 
     public void play (string stream) {
-    	loop.quit();
-        player.set_state(State.READY);
+        // Set player to accept a new stream
+        player.set_state(State.NULL);
+        // Set the new stream uri
 		player.uri = stream;
 
+        // Connect our bus
         var bus = player.get_bus ();
         bus.add_watch (0, bus_callback);
 
-        player.set_state (State.PLAYING);
-
-        loop.run ();
+        // Set state to playing
+        player.set_state(State.PLAYING);
+        state = State.PLAYING;
     }
 
     public void pause () {
     	player.set_state(State.PAUSED);
+        state = State.PAUSED;
+    }
+
+    public void resume () {
+        player.set_state(State.PLAYING);
+        state = State.PLAYING;
     }
 
     public void stop() {

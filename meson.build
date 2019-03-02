@@ -8,6 +8,7 @@ dlr_sources = [
     'src/main.vala',
     'src/MainWindow.vala',
     'src/DLF.vala',
+    'src/Nova.vala',
     'src/Station.vala',
     'src/StreamPlayer.vala'
 ]

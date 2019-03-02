@@ -2,7 +2,17 @@ public class MainWindow : Gtk.Application {
 
     public string title {get; private set;}
     private StreamPlayer player = new StreamPlayer();
-    const string DEFAULT_STREAM = "https://dg-dradio-https-fra-dtag-cdn.sslcast.addradio.de/dradio/dlf/live/mp3/128/stream.mp3";
+    private Gtk.Button play_button;
+    private Gtk.Image media_pause_icon = new Gtk.Image.from_stock
+                    (
+                        "gtk-media-pause",
+                        Gtk.IconSize.DIALOG
+                    );
+    private Gtk.Image media_play_icon = new Gtk.Image.from_stock
+                    (
+                        "gtk-media-play",
+                        Gtk.IconSize.DIALOG
+                    );
 
     public MainWindow () {
         Object(
@@ -17,6 +27,7 @@ public class MainWindow : Gtk.Application {
         var builder = new Gtk.Builder.from_resource("/com/github/kendin/dlr/window.ui");
         builder.connect_signals(this);
         var window = builder.get_object("main_window") as Gtk.Window;
+        play_button = builder.get_object("play_button") as Gtk.Button;
 
         // Load CSS
         Gtk.CssProvider css_provider = new Gtk.CssProvider ();
@@ -30,6 +41,10 @@ public class MainWindow : Gtk.Application {
         // Set title
         window.title = "Project Aircheck";
 
+        player.notify.connect((s, p) => {
+            update_play_button();
+        });
+
         // Run window
         window.show_all();
         Gtk.main();
@@ -40,7 +55,16 @@ public class MainWindow : Gtk.Application {
     public void on_dlrbutton_clicked(Gtk.Button sender)
     {
         // This function will be called when the "DLR" button gets clicked
-        player.play(DEFAULT_STREAM);
+        player.play(new DLF().get_stream_url());
+
+    }
+
+    [CCode (instance_pos = -1)]
+    public void on_novabutton_clicked(Gtk.Button sender)
+    {
+        // This function will be called when the "Nova" button gets clicked
+        player.play(new Nova().get_stream_url());
+
     }
 
     [CCode (instance_pos = -1)]
@@ -54,6 +78,29 @@ public class MainWindow : Gtk.Application {
     [CCode (instance_pos = -1)]
     public void on_play_clicked(Gtk.Button sender)
     {
-        player.pause();
+        switch(player.state) {
+            case Gst.State.PLAYING:
+                player.pause();
+                break;
+            case Gst.State.PAUSED:
+                player.resume();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void update_play_button()
+    {
+        switch(player.state) {
+            case Gst.State.PLAYING:
+                play_button.set_image(media_pause_icon);
+                break;
+            case Gst.State.PAUSED:
+                play_button.set_image(media_play_icon);
+                break;
+            default:
+                break;
+        }
     }
 }
