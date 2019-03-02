@@ -8,11 +8,13 @@ dlr_sources = [
     'src/main.vala',
     'src/MainWindow.vala',
     'src/DLF.vala',
-    'src/Station.vala'
+    'src/Station.vala',
+    'src/StreamPlayer.vala'
 ]
 
 dlr_dependencies = [
-    dependency('gtk+-3.0')
+    dependency('gtk+-3.0'),
+    dependency('gstreamer-1.0')
 ]
 
 dlr_sources += gnome.compile_resources(
@@ -23,11 +25,13 @@ dlr_sources += gnome.compile_resources(
 
 # Create a new executable, list the files we want to compile, list the dependencies we need, and install
 executable(
-    meson.project_name(),
+    # meson.project_name(),
+    'dlr',
     dlr_sources,
     vala_args: [
         '--pkg=gtk+-3.0', 
         '--pkg=gmodule-2.0',
+        '--pkg=gstreamer-1.0'
         ],
     dependencies: dlr_dependencies,
     install: true,
