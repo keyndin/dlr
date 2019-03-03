@@ -26,6 +26,7 @@ public class StreamPlayer:GLib.Object {
     private bool bus_callback (Gst.Bus bus, Gst.Message message) {
         switch (message.type) {
         case MessageType.ERROR:
+            // Something went wrong
             GLib.Error err;
             string debug;
             message.parse_error (out err, out debug);
@@ -33,14 +34,23 @@ public class StreamPlayer:GLib.Object {
             loop.quit();
             break;
         case MessageType.EOS:
+            // End of stream
+            state = State.PAUSED
             stdout.printf ("end of stream\n");
             break;
         case MessageType.STATE_CHANGED:
+            // State has changed
             Gst.State oldstate;
             Gst.State newstate;
             Gst.State pending;
             message.parse_state_changed (out oldstate, out newstate,
                                          out pending);
+            if (newstate == State.PAUSED) {
+                        state = State.PAUSED;
+            } else if (newstate == State.PLAYING) {
+                        state = State.PLAYING;
+            }
+    
             stdout.printf ("state changed: %s->%s:%s\n",
                            oldstate.to_string (), newstate.to_string (),
                            pending.to_string ());
@@ -69,17 +79,14 @@ public class StreamPlayer:GLib.Object {
 
         // Set state to playing
         player.set_state(State.PLAYING);
-        state = State.PLAYING;
     }
 
     public void pause () {
     	player.set_state(State.PAUSED);
-        state = State.PAUSED;
     }
 
     public void resume () {
         player.set_state(State.PLAYING);
-        state = State.PLAYING;
     }
 
     public void stop() {
