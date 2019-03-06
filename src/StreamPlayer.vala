@@ -35,7 +35,7 @@ public class StreamPlayer:GLib.Object {
             break;
         case MessageType.EOS:
             // End of stream
-            state = State.PAUSED
+            state = State.PAUSED;
             stdout.printf ("end of stream\n");
             break;
         case MessageType.STATE_CHANGED:
@@ -50,7 +50,7 @@ public class StreamPlayer:GLib.Object {
             } else if (newstate == State.PLAYING) {
                         state = State.PLAYING;
             }
-    
+
             stdout.printf ("state changed: %s->%s:%s\n",
                            oldstate.to_string (), newstate.to_string (),
                            pending.to_string ());
