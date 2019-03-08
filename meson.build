@@ -9,8 +9,13 @@ dlr_sources = [
     'src/MainWindow.vala',
     'src/DLF.vala',
     'src/Nova.vala',
-    'src/Station.vala',
-    'src/StreamPlayer.vala'
+    'src/Kultur.vala',
+    'src/A_Station.vala',
+    'src/E_StationNames.vala',
+    'src/Podcast.vala',
+    'src/Broadcast.vala',
+    'src/StreamPlayer.vala',
+
 ]
 
 dlr_dependencies = [
