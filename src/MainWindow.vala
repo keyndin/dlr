@@ -3,16 +3,9 @@ public class MainWindow : Gtk.Application {
     public string title {get; private set;}
     private StreamPlayer player = new StreamPlayer();
     private Gtk.Button play_button;
-    private Gtk.Image media_pause_icon = new Gtk.Image.from_stock
-                    (
-                        "gtk-media-pause",
-                        Gtk.IconSize.DIALOG
-                    );
-    private Gtk.Image media_play_icon = new Gtk.Image.from_stock
-                    (
-                        "gtk-media-play",
-                        Gtk.IconSize.DIALOG
-                    );
+    private DLF dlf = new DLF();
+    private Kultur kultur = new Kultur();
+    private Nova nova = new Nova();
 
     public MainWindow () {
         Object(
@@ -55,7 +48,7 @@ public class MainWindow : Gtk.Application {
     public void on_dlrbutton_clicked(Gtk.Button sender)
     {
         // This function will be called when the "DLR" button gets clicked
-        player.play(new DLF().get_stream_url());
+        player.play(dlf.get_stream_url());
 
     }
 
@@ -63,7 +56,15 @@ public class MainWindow : Gtk.Application {
     public void on_novabutton_clicked(Gtk.Button sender)
     {
         // This function will be called when the "Nova" button gets clicked
-        player.play(new Nova().get_stream_url());
+        player.play(nova.get_stream_url());
+
+    }
+
+    [CCode (instance_pos = -1)]
+    public void on_kulturbutton_clicked(Gtk.Button sender)
+    {
+        // This function will be called when the "Nova" button gets clicked
+        player.play(kultur.get_stream_url());
 
     }
 
@@ -92,12 +93,20 @@ public class MainWindow : Gtk.Application {
 
     private void update_play_button()
     {
+        // Icon naming convention can be found here:
+        // https://developer.gnome.org/icon-naming-spec/
         switch(player.state) {
             case Gst.State.PLAYING:
-                play_button.set_image(media_pause_icon);
+                var icon = new Gtk.Image.from_icon_name(
+                    "media-playback-pause",
+                    Gtk.IconSize.DIALOG);
+                play_button.set_image(icon);
                 break;
             case Gst.State.PAUSED:
-                play_button.set_image(media_play_icon);
+                var icon = new Gtk.Image.from_icon_name(
+                    "media-playback-start",
+                    Gtk.IconSize.DIALOG);
+                play_button.set_image(icon);
                 break;
             default:
                 break;
