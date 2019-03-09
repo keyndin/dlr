@@ -1,5 +1,12 @@
 # Setup 
 
+## Dependencies
+
+* gtk+-3.0
+* gmoduule-2.0
+* gstreamer-1.0
+* GXml-0.16
+
 ## Windows
 
 * install https://wiki.gnome.org/Projects/Vala/ValaOnWindows and follow the stops mentioned there to install ```vala```.
