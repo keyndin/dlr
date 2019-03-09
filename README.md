@@ -24,8 +24,9 @@
 * install ninja with ```brew install ninja```
 * install gtk3 with ```brew install gtk+3```
 * install gstreamer with ```brew install gstreamer```
-* install required gstreamer plugins with ```brew install gst-plugins-base gst-plugins-good gst-plugins-bad```
+* install required gstreamer plugins with ```brew install gst-plugins-base gst-plugins-good gst-plugins-bad gmlx```
 * install meson with ```python3 -m pip install meson```
+* You may have to add libffi to your ```PKG_CONFIG_PATH```: ```export PKG_CONFIG_PATH=/usr/local/opt/libffi/lib/pkgconfig```
 * Navigate into the projects source folder and execute ```meson build```.
 * cd into the generated build directory and execute ```ninja``` to compile the source files.
 * The project can be executed by running ```./com.github.keyndin.dlr``` 
