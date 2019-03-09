@@ -92,4 +92,9 @@ public class StreamPlayer:GLib.Object {
     public void stop() {
     	loop.quit();
     }
+
+    public void setVolume(double value)
+    {
+        player.volume = value;
+    }
 }
