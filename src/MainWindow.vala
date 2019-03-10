@@ -98,8 +98,7 @@ public class MainWindow : Gtk.Application {
         }
     }
 
-    private void update_play_button()
-    {
+    private void update_play_button() {
         // Icon naming convention can be found here:
         // https://developer.gnome.org/icon-naming-spec/
         // TODO: We need a state for stopped
@@ -109,9 +108,7 @@ public class MainWindow : Gtk.Application {
                     "media-playback-pause",
                     Gtk.IconSize.DIALOG);
                 play_button.set_image(icon);
-                player.station.get_live_program();
-                now_playing_label.set_label(player.station.preview.name);
-                now_playing_station.set_label(player.station.name.getLongName());
+                update_now_playing_label();
                 break;
             case Gst.State.PAUSED:
                 var icon = new Gtk.Image.from_icon_name(
@@ -122,5 +119,11 @@ public class MainWindow : Gtk.Application {
             default:
                 break;
         }
+    }
+
+    private void update_now_playing_label() {
+        player.station.get_live_program();
+        now_playing_label.set_label(player.station.preview.name);
+        now_playing_station.set_label(player.station.name.getLongName());
     }
 }
