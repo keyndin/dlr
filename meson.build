@@ -12,15 +12,17 @@ dlr_sources = [
     'src/Kultur.vala',
     'src/A_Station.vala',
     'src/E_StationNames.vala',
-    'src/Podcast.vala',
-    'src/Broadcast.vala',
     'src/StreamPlayer.vala',
-
+    'src/digests/Podcast.vala',
+    'src/digests/Broadcast.vala',
+    'src/digests/Preview.vala',
+    'src/Deserializable.vala',
 ]
 
 dlr_dependencies = [
     dependency('gtk+-3.0'),
-    dependency('gstreamer-1.0')
+    dependency('gstreamer-1.0'),
+    dependency('libxml-2.0'),
 ]
 
 dlr_sources += gnome.compile_resources(
@@ -37,7 +39,8 @@ executable(
     vala_args: [
         '--pkg=gtk+-3.0', 
         '--pkg=gmodule-2.0',
-        '--pkg=gstreamer-1.0'
+        '--pkg=gstreamer-1.0',
+        '--pkg=libxml-2.0',
         ],
     dependencies: dlr_dependencies,
     install: true,

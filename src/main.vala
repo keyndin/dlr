@@ -1,9 +1,6 @@
 // Main entry point for our application
 using Gst;
 
-
-
-
 public static int main (string[] args) {
 		// Initialize Gtk
 		Gtk.init(ref args);

@@ -2,7 +2,13 @@ public class MainWindow : Gtk.Application {
 
     public string title {get; private set;}
     private StreamPlayer player = new StreamPlayer();
+
+    // Window elements
+    private Gtk.Label now_playing_label;
+    private Gtk.Label now_playing_station;
     private Gtk.Button play_button;
+
+    // Stations
     private DLF dlf = new DLF();
     private Kultur kultur = new Kultur();
     private Nova nova = new Nova();
@@ -21,7 +27,8 @@ public class MainWindow : Gtk.Application {
         builder.connect_signals(this);
         var window = builder.get_object("main_window") as Gtk.Window;
         play_button = builder.get_object("play_button") as Gtk.Button;
-
+        now_playing_label = builder.get_object("media_playing_title") as Gtk.Label;
+        now_playing_station = builder.get_object("media_playing_station") as Gtk.Label;
         // Load CSS
         Gtk.CssProvider css_provider = new Gtk.CssProvider ();
         css_provider.load_from_resource("/com/github/kendin/dlr/window.ui.css");
@@ -48,7 +55,7 @@ public class MainWindow : Gtk.Application {
     public void on_dlrbutton_clicked(Gtk.Button sender)
     {
         // This function will be called when the "DLR" button gets clicked
-        player.play(dlf.get_stream_url());
+        player.play(dlf);
 
     }
 
@@ -56,7 +63,7 @@ public class MainWindow : Gtk.Application {
     public void on_novabutton_clicked(Gtk.Button sender)
     {
         // This function will be called when the "Nova" button gets clicked
-        player.play(nova.get_stream_url());
+        player.play(nova);
 
     }
 
@@ -64,7 +71,7 @@ public class MainWindow : Gtk.Application {
     public void on_kulturbutton_clicked(Gtk.Button sender)
     {
         // This function will be called when the "Nova" button gets clicked
-        player.play(kultur.get_stream_url());
+        player.play(kultur);
 
     }
 
@@ -95,12 +102,16 @@ public class MainWindow : Gtk.Application {
     {
         // Icon naming convention can be found here:
         // https://developer.gnome.org/icon-naming-spec/
+        // TODO: We need a state for stopped
         switch(player.state) {
             case Gst.State.PLAYING:
                 var icon = new Gtk.Image.from_icon_name(
                     "media-playback-pause",
                     Gtk.IconSize.DIALOG);
                 play_button.set_image(icon);
+                player.station.get_live_program();
+                now_playing_label.set_label(player.station.preview.name);
+                now_playing_station.set_label(player.station.name.getLongName());
                 break;
             case Gst.State.PAUSED:
                 var icon = new Gtk.Image.from_icon_name(

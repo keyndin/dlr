@@ -14,4 +14,16 @@ public enum E_StationNames{
             default: assert_not_reached();
         }
     }
+
+    public string getLongName() {
+        switch (this) {
+            case dlf:
+                return "Deutschlandfunk";
+            case nova:
+                return "Deutschlandfunk Nova";
+            case kultur:
+                return "Deutschlandfunk Kultur";
+            default: assert_not_reached();
+        }
+    }
 }

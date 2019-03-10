@@ -5,6 +5,7 @@ public class StreamPlayer:GLib.Object {
     private MainLoop loop = new MainLoop ();
     private dynamic Element player;
     public State state { get; private set;}
+    public A_Station station {public get; private set;}
 
     public StreamPlayer() {
     	player = ElementFactory.make ("playbin", "play");
@@ -67,11 +68,17 @@ public class StreamPlayer:GLib.Object {
         return true;
     }
 
-    public void play (string stream) {
+    public void play (A_Station now_playing) {
+        if (station == now_playing)
+            // we're already playing this station,
+            // we don't have to do anything
+            return;
+        station = now_playing;
+
         // Set player to accept a new stream
         player.set_state(State.NULL);
         // Set the new stream uri
-		player.uri = stream;
+		player.uri = station.get_stream_url();
 
         // Connect our bus
         var bus = player.get_bus ();
@@ -91,5 +98,6 @@ public class StreamPlayer:GLib.Object {
 
     public void stop() {
     	loop.quit();
+    	state = State.NULL;
     }
 }

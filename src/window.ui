@@ -2,35 +2,11 @@
 <!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkWindow">
-    <property name="can_focus">False</property>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <object class="GtkViewport">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <child>
-          <object class="GtkTextView">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-          </object>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkImage" id="next_icon">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="stock">gtk-media-next</property>
-    <property name="icon_size">6</property>
-  </object>
-  <object class="GtkImage" id="pause_button">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-media-pause</property>
-    <property name="icon_size">6</property>
+    <property name="icon_size">3</property>
   </object>
   <object class="GtkImage" id="play_icon">
     <property name="visible">True</property>
@@ -42,7 +18,7 @@
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="stock">gtk-media-previous</property>
-    <property name="icon_size">6</property>
+    <property name="icon_size">3</property>
   </object>
   <object class="GtkApplicationWindow" id="main_window">
     <property name="can_focus">False</property>
@@ -230,9 +206,6 @@
                 <property name="margin_top">8</property>
                 <property name="margin_bottom">9</property>
                 <child>
-                  <placeholder/>
-                </child>
-                <child>
                   <object class="GtkProgressBar">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -304,6 +277,52 @@ audio-volume-medium-symbolic</property>
             <property name="fill">True</property>
             <property name="pack_type">end</property>
             <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="valign">end</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel" id="media_playing_title">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="justify">center</property>
+                <property name="wrap">True</property>
+                <property name="ellipsize">middle</property>
+                <attributes>
+                  <attribute name="weight" value="semibold"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="media_playing_station">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <attributes>
+                  <attribute name="weight" value="thin"/>
+                  <attribute name="scale" value="-500"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>

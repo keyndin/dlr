@@ -3,3 +3,4 @@ public class Podcast:GLib.Object{
     public string podcast_title;
     public Broadcast[] broadcasts;
 }
+
