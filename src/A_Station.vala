@@ -1,5 +1,5 @@
 public abstract class A_Station:GLib.Object{
-    public E_StationNames name { public get; private set; }
+    public E_StationNames? name { public get; private set; }
     private string rpc_url = "https://srv.deutschlandradio.de/aodpreviewdata.1915.de.rpc?";
     public Preview preview { public get; protected set; }
 

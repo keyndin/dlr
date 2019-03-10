@@ -41,9 +41,16 @@ public class MainWindow : Gtk.Application {
         // Set title
         window.title = "Project Aircheck";
 
+        // Connect listeners
         player.notify.connect((s, p) => {
             update_play_button();
         });
+        player.station.notify.connect((s, p) => {
+            update_now_playing_label();
+        });
+
+        // Update program information pereodicly
+        Timeout.add_seconds(15, update_now_playing_label);
 
         // Run window
         window.show_all();
@@ -121,9 +128,12 @@ public class MainWindow : Gtk.Application {
         }
     }
 
-    private void update_now_playing_label() {
+    private bool update_now_playing_label() {
+        if (player.station == null)
+            return false;
         player.station.get_live_program();
         now_playing_label.set_label(player.station.preview.name);
         now_playing_station.set_label(player.station.name.getLongName());
+        return true;
     }
 }

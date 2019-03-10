@@ -5,11 +5,13 @@ public  abstract class Deserializable {
     protected Xml.Doc* doc;
     protected Xml.Node* root;
 
-    public abstract void parse();
+
 
     ~Deserializable() {
         cleanup();
     }
+
+    public abstract void parse();
 
     protected void get_from_uri(string uri) {
         // Get XML from URL and parse result

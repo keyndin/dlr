@@ -16,7 +16,5 @@ public class Preview : Deserializable {
         text = base.find_key("text");
         href = base.find_key("href");
         href_text = base.find_key("href_text");
-
-        stdout.printf("\n\n%s\n\n",name);
     }
 }
