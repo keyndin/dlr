@@ -10,8 +10,6 @@ public class Preview : Deserializable {
         // Get XML from URL and parse result
         base.get_from_uri(uri);
 
-        var root_name = base.root->name;
-
         name = base.find_key("name");
         text = base.find_key("text");
         href = base.find_key("href");

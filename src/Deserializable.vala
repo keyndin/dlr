@@ -46,16 +46,17 @@ public  abstract class Deserializable {
         string line;
         string res = "";
         var file = File.new_for_uri(uri);
-
-        var dis = new DataInputStream(file.read());
-
-
-        while ((line = dis.read_line(null)) != null) {
+        try {
+            var dis = new DataInputStream(file.read());
+            while ((line = dis.read_line(null)) != null) {
             // append all lines to res
             res += line;
         }
-
         return res;
+        } catch (GLib.Error e) {
+            stdout.printf("Error while opening stream %s", e.message);
+            return res;
+        }
     }
 
     public void cleanup() {
