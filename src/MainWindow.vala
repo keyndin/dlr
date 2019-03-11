@@ -90,6 +90,12 @@ public class MainWindow : Gtk.Application {
         }
     }
 
+    [CCode (instance_pos = -1)]
+    public void on_volume_changed(Gtk.ScaleButton sender)
+    {
+        player.setVolume(sender.value);
+    }
+
     private void update_play_button()
     {
         switch(player.state) {
