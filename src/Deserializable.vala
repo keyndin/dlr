@@ -62,7 +62,7 @@ Forschung aktuellTäglich das Neueste aus Naturwissenschaft, Medizin und Technik
 #endif
     }
 
-    private string read_from_uri_linux(uri) {
+    private string read_from_uri_linux(string uri) {
         string line;
         string res = "";
         try {
