@@ -6,6 +6,7 @@
 * gmoduule-2.0
 * gstreamer-1.0
 * libxml2.0
+* libsoup-2.4
 
 ## Windows
 

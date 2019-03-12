@@ -23,6 +23,7 @@ dlr_dependencies = [
     dependency('gtk+-3.0'),
     dependency('gstreamer-1.0'),
     dependency('libxml-2.0'),
+    dependency('libsoup-2.4'),
 ]
 
 dlr_sources += gnome.compile_resources(
@@ -36,12 +37,6 @@ executable(
     # meson.project_name(),
     'dlr',
     dlr_sources,
-    vala_args: [
-        '--pkg=gtk+-3.0', 
-        '--pkg=gmodule-2.0',
-        '--pkg=gstreamer-1.0',
-        '--pkg=libxml-2.0',
-        ],
     dependencies: dlr_dependencies,
     install: true,
     export_dynamic: true
