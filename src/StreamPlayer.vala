@@ -17,7 +17,6 @@ public class StreamPlayer:GLib.Object {
         case "title":
             string tag_string;
             list.get_string (tag, out tag_string);
-            stdout.printf ("tag: %s = %s\n", tag, tag_string);
             break;
         default:
             break;
@@ -31,7 +30,6 @@ public class StreamPlayer:GLib.Object {
             GLib.Error err;
             string debug;
             message.parse_error (out err, out debug);
-            stdout.printf ("Error: %s\n", err.message);
             loop.quit();
             break;
         case MessageType.EOS:
@@ -51,14 +49,9 @@ public class StreamPlayer:GLib.Object {
             } else if (newstate == State.PLAYING) {
                         state = State.PLAYING;
             }
-
-            stdout.printf ("state changed: %s->%s:%s\n",
-                           oldstate.to_string (), newstate.to_string (),
-                           pending.to_string ());
             break;
         case MessageType.TAG:
             Gst.TagList tag_list;
-            stdout.printf ("taglist found\n");
             message.parse_tag (out tag_list);
             tag_list.foreach ((TagForeachFunc) foreach_tag);
             break;
