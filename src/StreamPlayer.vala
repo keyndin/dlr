@@ -93,4 +93,9 @@ public class StreamPlayer:GLib.Object {
     	loop.quit();
     	state = State.NULL;
     }
+
+    public void setVolume(double value)
+    {
+        player.volume = value;
+    }
 }
