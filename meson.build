@@ -3,7 +3,6 @@ project('com.github.keyndin.dlr', 'vala', 'c')
 
 gnome = import('gnome')
 
-
 dlr_sources = [
     'src/main.vala',
     'src/MainWindow.vala',
