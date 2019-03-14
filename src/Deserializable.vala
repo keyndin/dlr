@@ -1,5 +1,7 @@
 using Xml;
+#if !LINUX
 using Soup;
+#endif
 
 public  abstract class Deserializable {
 
