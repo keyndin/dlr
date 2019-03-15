@@ -1,12 +1,13 @@
-public abstract class A_Station:GLib.Object{
+public abstract class A_Station: I_Playable, GLib.Object{
     public E_StationNames? name { public get; private set; }
-    private string rpc_url = "https://srv.deutschlandradio.de/aodpreviewdata.1915.de.rpc?";
     public Preview preview { public get; protected set; }
+
+    private string rpc_url = "https://srv.deutschlandradio.de/aodpreviewdata.1915.de.rpc?";
+
 
     protected A_Station(E_StationNames station_name){
         name = station_name;
-        this.preview = new Preview();
-
+        preview = new Preview();
     }
 
     public string get_stream_url(){
@@ -14,7 +15,7 @@ public abstract class A_Station:GLib.Object{
         +name.to_string()+"/live/mp3/128/stream.mp3";
     }
 
-    public void get_live_program(){
+    public void get_program_name(){
         int id = name;
         string uri = rpc_url+"drbm:station_id="+id.to_string();
         preview.uri = uri;
@@ -22,10 +23,16 @@ public abstract class A_Station:GLib.Object{
         preview.cleanup();
     }
 
+    public string get_name(){
+        return preview.name;
+    }
+
+    public string get_parent_name(){
+        return name.get_long_name();
+    }
 
     public Array<Podcast> get_podcasts(){
         return new Array<Podcast>();
     }
-
 }
 

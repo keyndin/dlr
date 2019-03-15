@@ -15,7 +15,7 @@ public enum E_StationNames{
         }
     }
 
-    public string getLongName() {
+    public string get_long_name() {
         switch (this) {
             case dlf:
                 return "Deutschlandfunk";

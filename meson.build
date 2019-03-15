@@ -5,17 +5,18 @@ gnome = import('gnome')
 
 dlr_sources = [
     'src/main.vala',
-    'src/MainWindow.vala',
-    'src/DLF.vala',
-    'src/Nova.vala',
-    'src/Kultur.vala',
-    'src/A_Station.vala',
-    'src/E_StationNames.vala',
-    'src/StreamPlayer.vala',
-    'src/digests/Podcast.vala',
-    'src/digests/Broadcast.vala',
-    'src/digests/Preview.vala',
-    'src/Deserializable.vala',
+    'src/ui/MainWindow.vala',
+    'src/stations/DLF.vala',
+    'src/stations/Nova.vala',
+    'src/stations/Kultur.vala',
+    'src/stations/playable/A_Station.vala',
+    'src/stations/E_StationNames.vala',
+    'src/stations/playable/I_Playable.vala',
+    'src/player/StreamPlayer.vala',
+    'src/stations/digests/Podcast.vala',
+    'src/stations/digests/Broadcast.vala',
+    'src/stations/digests/Preview.vala',
+    'src/utils/Deserializable.vala',
 ]
 
 dlr_dependencies = [
@@ -27,8 +28,8 @@ dlr_dependencies = [
 
 dlr_sources += gnome.compile_resources(
         'dlr-resources',
-        'src/gresource.xml',
-        source_dir: 'src'
+        'src/ui/gresource.xml',
+        source_dir: 'src/ui'
 )
 
 # Create a new executable, list the files we want to compile, list the dependencies we need, and install

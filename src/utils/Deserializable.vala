@@ -3,7 +3,7 @@ using Xml;
 using Soup;
 #endif
 
-public  abstract class Deserializable {
+public abstract class Deserializable {
 
     protected Xml.Doc* doc;
     protected Xml.Node* root;
@@ -13,6 +13,12 @@ public  abstract class Deserializable {
     }
 
     public abstract void parse();
+
+    public void cleanup() {
+        // libxml has manual memory management...
+        delete doc;
+        Parser.cleanup();
+    }
 
     protected void get_from_uri(string uri) {
         // Get XML from URL and parse result
@@ -72,9 +78,5 @@ public  abstract class Deserializable {
 #endif
     }
 
-    public void cleanup() {
-        // libxml has manual memory management...
-        delete doc;
-        Parser.cleanup();
-    }
+
 }
