@@ -11,8 +11,7 @@ public class Broadcast:GLib.Object, I_Playable{
         return broadcast_url;
     }
 
-    public void get_program_name(){
-
+    public void parse_xml(){
     }
 
     public string get_name(){

@@ -15,7 +15,7 @@ public abstract class A_Station: I_Playable, GLib.Object{
         +name.to_string()+"/live/mp3/128/stream.mp3";
     }
 
-    public void get_program_name(){
+    public void parse_xml(){
         int id = name;
         string uri = rpc_url+"drbm:station_id="+id.to_string();
         preview.uri = uri;
