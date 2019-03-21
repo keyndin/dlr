@@ -2,14 +2,52 @@ using Gst;
 
 public class StreamPlayer:GLib.Object {
 
+    public State state { get; private set;}
+    public I_Playable playable {public get; private set;}
     private MainLoop loop = new MainLoop ();
     private dynamic Element player;
-    public State state { get; private set;}
-    public A_Station station {public get; private set;}
 
     public StreamPlayer() {
     	player = ElementFactory.make ("playbin", "play");
     	player.set_state(State.READY);
+    }
+
+    public void play (I_Playable now_playing) {
+        if (playable == now_playing)
+            // we're already playing this playable,
+            // we don't have to do anything
+            return;
+        playable = now_playing;
+
+        // Set player to accept a new stream
+        player.set_state(State.NULL);
+        // Set the new stream uri
+		player.uri = playable.get_stream_url();
+
+        // Connect our bus
+        var bus = player.get_bus ();
+        bus.add_watch (0, bus_callback);
+
+        // Set state to playing
+        player.set_state(State.PLAYING);
+    }
+
+    public void pause () {
+    	player.set_state(State.PAUSED);
+    }
+
+    public void resume () {
+        player.set_state(State.PLAYING);
+    }
+
+    public void stop() {
+    	loop.quit();
+    	state = State.NULL;
+    }
+
+    public void set_volume(double value)
+    {
+        player.volume = value;
     }
 
     private void foreach_tag (Gst.TagList list, string tag) {
@@ -59,43 +97,5 @@ public class StreamPlayer:GLib.Object {
             break;
         }
         return true;
-    }
-
-    public void play (A_Station now_playing) {
-        if (station == now_playing)
-            // we're already playing this station,
-            // we don't have to do anything
-            return;
-        station = now_playing;
-
-        // Set player to accept a new stream
-        player.set_state(State.NULL);
-        // Set the new stream uri
-		player.uri = station.get_stream_url();
-
-        // Connect our bus
-        var bus = player.get_bus ();
-        bus.add_watch (0, bus_callback);
-
-        // Set state to playing
-        player.set_state(State.PLAYING);
-    }
-
-    public void pause () {
-    	player.set_state(State.PAUSED);
-    }
-
-    public void resume () {
-        player.set_state(State.PLAYING);
-    }
-
-    public void stop() {
-    	loop.quit();
-    	state = State.NULL;
-    }
-
-    public void setVolume(double value)
-    {
-        player.volume = value;
     }
 }

@@ -5,7 +5,7 @@ public class MainWindow : Gtk.Application {
 
     // Window elements
     private Gtk.Label now_playing_label;
-    private Gtk.Label now_playing_station;
+    private Gtk.Label now_playing_parent;
     private Gtk.Button play_button;
 
     // Stations
@@ -21,41 +21,7 @@ public class MainWindow : Gtk.Application {
         // this.Streamplayer = new StreamPlayer();
     }
 
-    protected override void activate () {
-        // Load UI from file
-        var builder = new Gtk.Builder.from_resource("/com/github/kendin/dlr/window.ui");
-        builder.connect_signals(this);
-        var window = builder.get_object("main_window") as Gtk.Window;
-        play_button = builder.get_object("play_button") as Gtk.Button;
-        now_playing_label = builder.get_object("media_playing_title") as Gtk.Label;
-        now_playing_station = builder.get_object("media_playing_station") as Gtk.Label;
-        // Load CSS
-        Gtk.CssProvider css_provider = new Gtk.CssProvider ();
-        css_provider.load_from_resource("/com/github/kendin/dlr/window.ui.css");
-        Gtk.StyleContext.add_provider_for_screen(
-            Gdk.Screen.get_default(), 
-            css_provider, 
-            Gtk.STYLE_PROVIDER_PRIORITY_USER
-        );
 
-        // Set title
-        window.title = "Project Aircheck";
-
-        // Connect listeners
-        player.notify.connect((s, p) => {
-            update_play_button();
-        });
-        player.station.notify.connect((s, p) => {
-            update_now_playing_label();
-        });
-
-        // Update program information pereodicly
-        Timeout.add_seconds(15, update_now_playing_label);
-
-        // Run window
-        window.show_all();
-        Gtk.main();
-    }
 
     // Since Vala compiles to C, we want our instance variable set last
     [CCode (instance_pos = -1)]
@@ -108,7 +74,43 @@ public class MainWindow : Gtk.Application {
     [CCode (instance_pos = -1)]
     public void on_volume_changed(Gtk.ScaleButton sender)
     {
-        player.setVolume(sender.value);
+        player.set_volume(sender.value);
+    }
+
+    protected override void activate () {
+        // Load UI from file
+        var builder = new Gtk.Builder.from_resource("/com/github/kendin/dlr/window.ui");
+        builder.connect_signals(this);
+        var window = builder.get_object("main_window") as Gtk.Window;
+        play_button = builder.get_object("play_button") as Gtk.Button;
+        now_playing_label = builder.get_object("media_playing_title") as Gtk.Label;
+        now_playing_parent = builder.get_object("media_playing_station") as Gtk.Label;
+        // Load CSS
+        Gtk.CssProvider css_provider = new Gtk.CssProvider ();
+        css_provider.load_from_resource("/com/github/kendin/dlr/window.ui.css");
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(),
+            css_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_USER
+        );
+
+        // Set title
+        window.title = "Project Aircheck";
+
+        // Connect listeners
+        player.notify.connect((s, p) => {
+            update_play_button();
+        });
+        player.playable.notify.connect((s, p) => {
+            update_now_playing_label();
+        });
+
+        // Update program information pereodicly
+        Timeout.add_seconds(15, update_now_playing_label);
+
+        // Run window
+        window.show_all();
+        Gtk.main();
     }
 
     private void update_play_button() {
@@ -135,11 +137,11 @@ public class MainWindow : Gtk.Application {
     }
 
     private bool update_now_playing_label() {
-        if (player.station == null)
+        if (player.playable == null)
             return false;
-        player.station.get_live_program();
-        now_playing_label.set_label(player.station.preview.name);
-        now_playing_station.set_label(player.station.name.getLongName());
+        player.playable.get_program_name();
+        now_playing_label.set_label(player.playable.get_name());
+        now_playing_parent.set_label(player.playable.get_parent_name());
         return true;
     }
 }
