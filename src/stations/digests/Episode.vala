@@ -11,7 +11,7 @@ public class Episode:GLib.Object, I_Playable{
         return episode_url;
     }
 
-    public void parse_preview(){
+    public void set_preview(){
     }
 
     public string get_name(){

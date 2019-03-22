@@ -12,6 +12,6 @@ public class BroadcastParser : Deserializable {
         //ToDo: Get Episodes per Broadcast
         Broadcast broadcast = new Broadcast();
         broadcast.broadcast_title = base.find_key("item");
-        broadcasts += broadcast;
+        broadcasts.append_val(broadcast);
     }
 }
