@@ -1,4 +1,4 @@
-public class Preview : Deserializable {
+public class LiveRadioInfo : Deserializable {
     public int station {get; private set;}
     public string name {get;private set;}
     public string text {get;private set;}
