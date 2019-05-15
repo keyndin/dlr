@@ -14,11 +14,12 @@ public class Episode:GLib.Object, I_Playable{
     public void set_preview(){
     }
 
-    public string get_name(){
+    public string get_program_name(){
         return episode_description;
     }
 
     public string get_parent_name(){
         return "Broadcastname";
     }
+
 }

@@ -25,7 +25,7 @@ public abstract class A_Station: I_Playable, GLib.Object{
         live_radio_info.cleanup();
     }
 
-    public string get_name(){
+    public string get_program_name(){
         return live_radio_info.name;
     }
 
