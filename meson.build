@@ -13,9 +13,11 @@ dlr_sources = [
     'src/stations/E_StationNames.vala',
     'src/stations/playable/I_Playable.vala',
     'src/player/StreamPlayer.vala',
-    'src/stations/digests/Podcast.vala',
+    'src/stations/digests/Episode.vala',
     'src/stations/digests/Broadcast.vala',
-    'src/stations/digests/Preview.vala',
+    'src/stations/digests/LiveRadioInfo.vala',
+    'src/stations/digests/BroadcastParser.vala',
+    'src/stations/digests/EpisodeParser.vala',
     'src/utils/Deserializable.vala',
 ]
 

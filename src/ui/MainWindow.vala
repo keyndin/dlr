@@ -139,7 +139,7 @@ public class MainWindow : Gtk.Application {
     private bool update_now_playing_label() {
         if (player.playable == null)
             return false;
-        player.playable.get_program_name();
+        player.playable.set_preview();
         now_playing_label.set_label(player.playable.get_name());
         now_playing_parent.set_label(player.playable.get_parent_name());
         return true;
