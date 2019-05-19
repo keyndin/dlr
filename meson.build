@@ -18,6 +18,10 @@ dlr_sources = [
     'src/stations/digests/LiveRadioInfo.vala',
     'src/stations/digests/BroadcastParser.vala',
     'src/stations/digests/EpisodeParser.vala',
+    'src/stations/digests/LiveRadioInfoJsonParser.vala',
+    'src/stations/digests/BroadcastJsonParser.vala',
+    'src/stations/digests/EpisodeJsonParser.vala',
+    'src/utils/AircheckJsonParser.vala',
     'src/utils/Deserializable.vala',
 ]
 
@@ -26,6 +30,7 @@ dlr_dependencies = [
     dependency('gstreamer-1.0'),
     dependency('libxml-2.0'),
     dependency('libsoup-2.4'),
+    dependency('json-glib-1.0')
 ]
 
 dlr_sources += gnome.compile_resources(
