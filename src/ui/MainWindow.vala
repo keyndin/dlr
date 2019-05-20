@@ -100,7 +100,7 @@ public class MainWindow : Gtk.Application {
         play_button = builder.get_object("play_button") as Gtk.Button;
         now_playing_label = builder.get_object("media_playing_title") as Gtk.Label;
         now_playing_parent = builder.get_object("media_playing_station") as Gtk.Label;
-        about_dialog = builder.get_object("about_dialo") as Gtk.Dialog;
+        about_dialog = builder.get_object("about_dialog") as Gtk.Dialog;
         // Load CSS
         Gtk.CssProvider css_provider = new Gtk.CssProvider ();
         css_provider.load_from_resource("/com/github/kendin/dlr/window.ui.css");
