@@ -1,4 +1,4 @@
-public class LiveRadioInfoJsonParser : AircheckJsonParser<LiveRadioInfo>{
+public class LiveRadioInfoJsonParser : A_JsonParser<LiveRadioInfo>{
     public string uri {get;set; default = "";}
     public LiveRadioInfo info {get;private set;}
 

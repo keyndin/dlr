@@ -21,7 +21,7 @@ dlr_sources = [
     'src/stations/digests/LiveRadioInfoJsonParser.vala',
     'src/stations/digests/BroadcastJsonParser.vala',
     'src/stations/digests/EpisodeJsonParser.vala',
-    'src/utils/AircheckJsonParser.vala',
+    'src/utils/A_JsonParser.vala',
     'src/utils/Deserializable.vala',
 ]
 

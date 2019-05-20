@@ -1,6 +1,6 @@
 public abstract class A_Station: I_Playable, GLib.Object{
     public E_StationNames? name { public get; private set; }
-    public LiveRadioInfo live_radio_info { public get; protected set; }
+    //public LiveRadioInfo live_radio_info { public get; protected set; }
     public BroadcastParser broadcast_parser { public get; protected set; }
     public LiveRadioInfoJsonParser live_json { public get; protected set; }
 
@@ -9,7 +9,7 @@ public abstract class A_Station: I_Playable, GLib.Object{
 
     protected A_Station(E_StationNames station_name){
         name = station_name;
-        live_radio_info = new LiveRadioInfo();
+        //live_radio_info = new LiveRadioInfo();
         live_json = new LiveRadioInfoJsonParser();
         broadcast_parser =  new BroadcastParser();
     }
@@ -22,17 +22,17 @@ public abstract class A_Station: I_Playable, GLib.Object{
     public void set_preview(){
         int id = name;
         string uri = rpc_url+"drbm:station_id="+id.to_string();
-        live_radio_info.uri = uri;
-        live_radio_info.parse();
-        live_radio_info.cleanup();
+        //live_radio_info.uri = uri;
+        //live_radio_info.parse();
+        //live_radio_info.cleanup();
 
-        //live_json.uri = uri;
-        //live_json.parse();
+        live_json.uri = uri;
+        live_json.parse();
     }
 
     public string get_program_name(){
-        return live_radio_info.name;
-        //return live_json.info.name;
+        //return live_radio_info.name;
+        return live_json.info.name;
     }
 
     public string get_parent_name(){

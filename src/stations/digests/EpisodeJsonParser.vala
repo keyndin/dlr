@@ -1,4 +1,4 @@
-public class EpisodeJsonParser : AircheckJsonParser<Episode>{
+public class EpisodeJsonParser : A_JsonParser<Episode>{
     public Array<Episode> episodes { get; set; }
     public string uri { get; set; default = ""; }
 

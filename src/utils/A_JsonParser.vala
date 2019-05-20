@@ -1,12 +1,14 @@
 using Soup;
 using Json;
 
-public abstract class AircheckJsonParser<T>{
+public abstract class A_JsonParser<T>{
 
     protected T JsonResult;
 
     protected void get_from_uri(string uri){
         var message = new Message("GET", uri);
+        var session = new Session();
+        session.send_message(message);
 
         try {
             var parser = new Parser();
@@ -14,11 +16,17 @@ public abstract class AircheckJsonParser<T>{
                 (string) message
                             .response_body
                             .flatten()
-                            .data, -1
+                            .data,-1
             );
-            this.JsonResult = parser
+
+            var root_object = parser
                                 .get_root()
                                 .get_object();
+            var response = root_object
+                            .get_object_member("response");
+
+            this.JsonResult = response;
+
         }
         catch (Error e){
             stderr.printf("%s\n", e.message);

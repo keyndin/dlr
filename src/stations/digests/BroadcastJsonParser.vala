@@ -1,4 +1,4 @@
-public class BroadcastJsonParser : AircheckJsonParser<Broadcast>{
+public class BroadcastJsonParser : A_JsonParser<Broadcast>{
     public Array<Broadcast> broadcasts { get; set; }
     public string uri { get; set; default = ""; }
 
