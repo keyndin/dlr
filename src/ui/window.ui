@@ -66,7 +66,6 @@ Florian Lang
 Daniel Lauer</property>
     <property name="logo">static/project_aircheck.png</property>
     <property name="license_type">gpl-3-0</property>
-    <signal name="close" handler="about_dialog_close_about()" swapped="no"/>
     <child>
       <placeholder/>
     </child>

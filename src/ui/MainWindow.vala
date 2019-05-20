@@ -60,7 +60,7 @@ public class MainWindow : Gtk.Application {
     public void on_open_about_clicked(Gtk.Button sender)
     {
         about_dialog.run();
-        // TODO
+        about_dialog.hide();
     }
 
     [CCode (instance_pos = -1)]
@@ -94,7 +94,7 @@ public class MainWindow : Gtk.Application {
 
     protected override void activate () {
         // Load UI from file
-        var builder = new Gtk.Builder.from_resource("/com/github/kendin/dlr/window.ui");
+        var builder = new Gtk.Builder.from_resource("/com/github/keyndin/dlr/window.ui");
         builder.connect_signals(this);
         var window = builder.get_object("main_window") as Gtk.Window;
         play_button = builder.get_object("play_button") as Gtk.Button;
@@ -103,7 +103,7 @@ public class MainWindow : Gtk.Application {
         about_dialog = builder.get_object("about_dialog") as Gtk.Dialog;
         // Load CSS
         Gtk.CssProvider css_provider = new Gtk.CssProvider ();
-        css_provider.load_from_resource("/com/github/kendin/dlr/window.ui.css");
+        css_provider.load_from_resource("/com/github/keyndin/dlr/window.ui.css");
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(),
             css_provider,
