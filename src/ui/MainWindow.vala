@@ -7,6 +7,7 @@ public class MainWindow : Gtk.Application {
     private Gtk.Label now_playing_label;
     private Gtk.Label now_playing_parent;
     private Gtk.Button play_button;
+    private Gtk.Dialog about_dialog;
 
     // Stations
     private DLF dlf = new DLF();
@@ -49,6 +50,20 @@ public class MainWindow : Gtk.Application {
     }
 
     [CCode (instance_pos = -1)]
+    public void on_open_popover_menu_clicked(Gtk.Button sender)
+    {
+
+        // TODO
+    }
+
+    [CCode (instance_pos = -1)]
+    public void on_open_about_clicked(Gtk.Button sender)
+    {
+        about_dialog.run();
+        // TODO
+    }
+
+    [CCode (instance_pos = -1)]
     public void on_destroy(Gtk.Button sender)
     {
         // This function will be called when the "DLR" button gets clicked
@@ -85,6 +100,7 @@ public class MainWindow : Gtk.Application {
         play_button = builder.get_object("play_button") as Gtk.Button;
         now_playing_label = builder.get_object("media_playing_title") as Gtk.Label;
         now_playing_parent = builder.get_object("media_playing_station") as Gtk.Label;
+        about_dialog = builder.get_object("about_dialo") as Gtk.Dialog;
         // Load CSS
         Gtk.CssProvider css_provider = new Gtk.CssProvider ();
         css_provider.load_from_resource("/com/github/kendin/dlr/window.ui.css");
@@ -132,6 +148,11 @@ public class MainWindow : Gtk.Application {
                 play_button.set_image(icon);
                 break;
             default:
+                var icon = new Gtk.Image.from_icon_name(
+                    "view-refresh",
+                    Gtk.IconSize.DIALOG);
+                play_button.set_image(icon);
+                update_now_playing_label();
                 break;
         }
     }
