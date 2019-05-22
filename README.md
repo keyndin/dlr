@@ -34,11 +34,10 @@ To compile DLR under windows please use [MingW](http://www.mingw.org) and follow
 * Install gstreamer by running ```brew install gstreamer```
 * Finally install the required gstreamer plugins with ```brew install gst-plugins-base gst-plugins-good gst-plugins-bad gmlx```
 * Then install meson with pip by running ```python3 -m pip install meson```
-* You may have to add libffi to your ```PKG_CONFIG_PATH```: ```export PKG_CONFIG_PATH=/usr/local/opt/libffi/lib/pkgconfig```
-* Since MacOS comes shipped with it's own LibXML you might have to add  the correct one to your PKG_CONFIG_PATH.
+* You may have to add libffi and libxml2 (MacOS comes with its own version of libxml2) to your ```PKG_CONFIG_PATH```: ```export PKG_CONFIG_PATH=/usr/local/opt/libxml2/lib/pkgconfig:/usr/local/opt/libffi/lib/pkgconfig```
 * Navigate into the projects source folder and execute ```meson build```.
-* cd into the generated build directory and execute ```ninja``` to compile the source files.
-* The project can be executed by running ```./com.github.keyndin.dlr```
+* The project can now be compiled using ninja: ```ninja -C build```.
+* To run dlr simply execute the binary ```./build/dlr```
 
 ## Linux
 
