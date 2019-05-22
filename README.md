@@ -27,11 +27,11 @@ To compile DLR under windows please use [MYSYS](http://www.mingw.org/wiki/MSYS) 
 
 * Navigate to the project source folder and execute ```meson build```.
 * To compile the source files run ```ninja -C build```.
-* The project can then be executed by running ```./build/dlr.exe```
+* The project can then be executed by running ```./build/dlr.exe```. Please note that (unless you follow the steps under Deployment) the binary **MUST** be executed withing MYSYS.
 
 ### Deployment
 
-* To copy all the required libraries into our build folder run ```ldd build/dlr.exe | grep '\/mingw.*\.dll' -o | xargs -I{} cp "{}" ./build``` (this is required to be able to execute DLR without needing the MingW environment).
+* To copy all linked libraries into our build folder run ```ldd build/dlr.exe | grep '\/mingw.*\.dll' -o | xargs -I{} cp "{}" ./build``` (this is required to be able to execute DLR without needing the MYSYS environment).
 * Finally since windows doesn't come shipped with GTK stock items we need to add them manually to our application.
 
 ---
