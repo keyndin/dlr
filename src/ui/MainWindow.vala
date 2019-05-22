@@ -8,7 +8,8 @@ public class MainWindow : Gtk.Application {
     private Gtk.Label now_playing_parent;
     private Gtk.Button play_button;
     private Gtk.Dialog about_dialog;
-
+    private Gtk.PopoverMenu popover_fav_menu;
+    private Gtk.TreeView broadcasts_tree_view;
     // Stations
     private DLF dlf = new DLF();
     private Kultur kultur = new Kultur();
@@ -22,6 +23,12 @@ public class MainWindow : Gtk.Application {
         // this.Streamplayer = new StreamPlayer();
     }
 
+
+    enum broadcast_columns{
+        STATION,
+        BROADCAST,
+        FAVORITE
+    }
 
 
     // Since Vala compiles to C, we want our instance variable set last
@@ -44,17 +51,77 @@ public class MainWindow : Gtk.Application {
     [CCode (instance_pos = -1)]
     public void on_kulturbutton_clicked(Gtk.Button sender)
     {
-        // This function will be called when the "Nova" button gets clicked
+        // This function will be called when the "Kultur" button gets clicked
         player.play(kultur);
-
     }
+
 
     [CCode (instance_pos = -1)]
     public void on_open_popover_menu_clicked(Gtk.Button sender)
     {
+        //checks if the popover is currently open
+        var is_popover_open = popover_fav_menu.get_visible();
 
-        // TODO
+        if(is_popover_open == false){
+            popover_fav_menu.popup();
+        }
+        else{
+            popover_fav_menu.popdown();
+        }
     }
+
+    [CCode (instance_pos = -1)]
+    public void on_broadcasts_button_clicked(Gtk.Button sender){
+
+        var is_popover_open = popover_fav_menu.get_visible();
+
+        if(is_popover_open == true){
+            popover_fav_menu.popdown();
+        }
+
+
+        if(broadcasts_tree_view.get_columns().length() == 0){
+
+            //mock data for treeview
+            var listmodel = new Gtk.ListStore(3, typeof(string), typeof(string), typeof(string));
+
+            broadcasts_tree_view.set_model(listmodel);
+
+            broadcasts_tree_view.insert_column_with_attributes(-1
+            ,"Station"
+            , new Gtk.CellRendererText()
+            , "text"
+            , broadcast_columns.STATION);
+
+            broadcasts_tree_view.insert_column_with_attributes(-1
+            , "Sendung"
+            , new Gtk.CellRendererText()
+            , "text"
+            , broadcast_columns.BROADCAST);
+
+            broadcasts_tree_view.insert_column_with_attributes(-1
+            , "Favorit"
+            , new Gtk.CellRendererText()
+            , "text"
+            , broadcast_columns.FAVORITE);
+
+
+            Broadcasts_test[] broadcasts_test_data = {
+                new Broadcasts_test("DLF", "Am Sonntag Morgen", "Ja"),
+                new Broadcasts_test("Nova", "Dein Sonntag", "Nein")
+            };
+
+            Gtk.TreeIter iter;
+            for(int i = 0; i < broadcasts_test_data.length; i++){
+                listmodel.append (out iter);
+                listmodel.set(iter
+                , broadcast_columns.STATION, broadcasts_test_data[i].station_name
+                , broadcast_columns.BROADCAST, broadcasts_test_data[i].broadcast_name
+                , broadcast_columns.FAVORITE, broadcasts_test_data[i].favorite_state);
+            }
+        }
+    }
+
 
     [CCode (instance_pos = -1)]
     public void on_open_about_clicked(Gtk.Button sender)
@@ -101,6 +168,8 @@ public class MainWindow : Gtk.Application {
         now_playing_label = builder.get_object("media_playing_title") as Gtk.Label;
         now_playing_parent = builder.get_object("media_playing_station") as Gtk.Label;
         about_dialog = builder.get_object("about_dialog") as Gtk.Dialog;
+        popover_fav_menu = builder.get_object("popover_fav_menu") as Gtk.PopoverMenu;
+        broadcasts_tree_view = builder.get_object("broadcasts_tree_view") as Gtk.TreeView;
         // Load CSS
         Gtk.CssProvider css_provider = new Gtk.CssProvider ();
         css_provider.load_from_resource("/com/github/keyndin/dlr/window.ui.css");
@@ -166,3 +235,17 @@ public class MainWindow : Gtk.Application {
         return true;
     }
 }
+
+//mock class for treeview
+public class Broadcasts_test{
+    public string station_name;
+    public string broadcast_name;
+    public string favorite_state;
+
+    public Broadcasts_test(string station, string broadcast, string favorite){
+        this.station_name = station;
+        this.broadcast_name = broadcast;
+        this.favorite_state = favorite;
+    }
+}
+

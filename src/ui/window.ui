@@ -143,11 +143,11 @@ Daniel Lauer</property>
                 <property name="spacing">4</property>
                 <property name="layout_style">start</property>
                 <child>
-                  <object class="GtkModelButton" id="fav_button">
+                  <object class="GtkModelButton" id="popover_fav_button">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="text" translatable="yes">Index</property>
+                    <property name="text" translatable="yes">Menü</property>
                     <property name="menu_name">popover_fav_menu</property>
                     <property name="centered">True</property>
                     <signal name="clicked" handler="main_window_on_open_popover_menu_clicked" swapped="no"/>
@@ -159,7 +159,7 @@ Daniel Lauer</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="dlrbutton">
+                  <object class="GtkButton" id="dlr_button">
                     <property name="label" translatable="yes">DLR</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -462,14 +462,38 @@ audio-volume-medium-symbolic</property>
           </packing>
         </child>
         <child>
-          <placeholder/>
+          <object class="GtkBox" id="broadcasts_box">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">2</property>
+            <child>
+              <object class="GtkTreeView" id="broadcasts_tree_view">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection"/>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
         </child>
       </object>
     </child>
   </object>
   <object class="GtkPopoverMenu" id="popover_fav_menu">
     <property name="can_focus">False</property>
-    <property name="relative_to">fav_button</property>
+    <property name="relative_to">popover_fav_button</property>
     <property name="modal">False</property>
     <child>
       <object class="GtkBox">
@@ -491,12 +515,13 @@ audio-volume-medium-symbolic</property>
           </packing>
         </child>
         <child>
-          <object class="GtkButton">
-            <property name="label" translatable="yes">Podcasts</property>
+          <object class="GtkButton" id="broadcasts_button">
+            <property name="label" translatable="yes">Sendungen</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="valign">center</property>
+            <signal name="clicked" handler="main_window_on_broadcasts_button_clicked" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
