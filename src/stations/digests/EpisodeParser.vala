@@ -9,6 +9,9 @@ public class EpisodeParser : Deserializable {
         //ToDo: Loop over all xml-items and their children, parse children
         Episode episode = new Episode();
         episode.episode_description = base.find_key("item");
+    }
 
+    public override void find_all_by_key(string key){
+        // NOT YET IMPLEMENTED
     }
 }

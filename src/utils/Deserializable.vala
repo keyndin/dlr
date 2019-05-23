@@ -29,7 +29,7 @@ public abstract class Deserializable {
         this.root = root;
     }
 
-    private bool is_element_node(Xml.Node* iter){
+    public bool is_element_node(Xml.Node* iter){
         return iter->type == ElementType.ELEMENT_NODE;
     }
 
@@ -49,24 +49,7 @@ public abstract class Deserializable {
         return "NOT YET IMPLEMENTED";
     }
 
-    protected Array<string> find_all_keys (string key){
-        var nodes = new Array<string>();
-
-        for (Xml.Node* iter = root->children; iter != null; iter = iter->next){
-            if (!is_element_node(iter)) {
-                // Spaces between tags are handled as nodes too, skip them
-                continue;
-            }
-
-            if (iter->name == key) {
-                var content = iter->get_content().normalize();
-                nodes.append_val(content);
-            }
-
-        }
-
-        return nodes;
-    }
+    public abstract void find_all_by_key (string key);
 
     protected string read_from_uri(string uri) {
         // Get content from URI and return it as string
