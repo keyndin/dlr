@@ -21,14 +21,11 @@ public class BroadcastParser : Deserializable {
 
             if (iter->name == key) {
                 var broadcast_id = int.parse(iter->get_prop("id"));
-                if(broadcast_id != 769){
-
-                    var broadcast = new Broadcast();
-                    broadcast.broadcast_title = iter->get_content().normalize();
-                    broadcast.broadcast_id = broadcast_id;
-                    print_indent(broadcast.broadcast_id, broadcast.broadcast_title);
-                    broadcasts.append_val(broadcast);
-                }
+                var broadcast = new Broadcast();
+                broadcast.broadcast_title = iter->get_content().normalize();
+                broadcast.broadcast_id = broadcast_id;
+                print_indent(broadcast.broadcast_id, broadcast.broadcast_title);
+                broadcasts.append_val(broadcast);
             }
 
         }
