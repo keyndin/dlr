@@ -40,7 +40,6 @@ public abstract class A_Station: I_Playable, GLib.Object{
     }
 
     public void get_broadcasts(){
-        print(name.to_string());
         broadcast_parser.uri = broadcast_url
                                +"drbm:station_id="
                                +station_id.to_string();
@@ -55,7 +54,15 @@ public abstract class A_Station: I_Playable, GLib.Object{
                              +"&drau:broadcast_id="
                              +broadcast.broadcast_id.to_string();
         episode_parser.parse();
-        broadcast.episodes = episode_parser.episodes;
+
+        broadcast.episodes = new Array<Episode>();
+        var episodes = episode_parser.episodes;
+
+        for(int i = 0; i < episodes.length; i++){
+            var episode = episodes.index(i);
+            broadcast.episodes.append_val(episode);
+        }
+
         episode_parser.cleanup();
     }
 }

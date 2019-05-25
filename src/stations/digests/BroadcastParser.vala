@@ -24,16 +24,9 @@ public class BroadcastParser : Deserializable {
                 var broadcast = new Broadcast();
                 broadcast.broadcast_title = iter->get_content().normalize();
                 broadcast.broadcast_id = broadcast_id;
-                print_indent(broadcast.broadcast_id, broadcast.broadcast_title);
                 broadcasts.append_val(broadcast);
             }
 
         }
     }
-
-    private void print_indent (int node_id, string content, char bullet = '*'){
-      string indent = string.nfill(4, ' ');
-      stdout.printf("%s%c%s: %s\n", indent, bullet, node_id.to_string(), content);
-    }
-
 }

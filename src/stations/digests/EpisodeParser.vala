@@ -4,6 +4,7 @@ public class EpisodeParser : Deserializable {
 
     public override void parse() {
         // Get XML from URL and parse result
+        episodes = new Array<Episode>();
         base.get_from_uri(uri);
         find_all_by_key("item");
     }
@@ -33,18 +34,11 @@ public class EpisodeParser : Deserializable {
                     if(child->name == "author")
                         episode.episode_author = child->get_content().normalize();
                     if(child->name == "sendung")
-                        episode.broadcast_id = int.parse(iter->get_prop("id"));
+                        episode.broadcast_id = int.parse(child->get_prop("id"));
 
                 }
-                print_indent(episode.episode_id, episode.episode_description);
                 episodes.append_val(episode);
             }
         }
     }
-
-    private void print_indent (int node_id, string content, char bullet = '*'){
-      string indent = string.nfill(4, ' ');
-      stdout.printf("%s%c%s: %s\n", indent, bullet, node_id.to_string(), content);
-    }
-
 }
