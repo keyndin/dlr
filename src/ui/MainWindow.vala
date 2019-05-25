@@ -10,6 +10,10 @@ public class MainWindow : Gtk.Application {
     private Gtk.Dialog about_dialog;
     private Gtk.PopoverMenu popover_fav_menu;
     private Gtk.TreeView broadcasts_tree_view;
+    private Gtk.TreeView favorites_tree_view;
+    private Gtk.TreeView program_tree_view;
+    private Gtk.TreeView episodes_tree_view;
+
     // Stations
     private DLF dlf = new DLF();
     private Kultur kultur = new Kultur();
@@ -30,6 +34,14 @@ public class MainWindow : Gtk.Application {
         FAVORITE
     }
 
+    enum episode_columns{
+        TIMESTAMP,
+        BROADCAST,
+        EPISODE,
+        AUTHOR,
+        DURATION
+    }
+
 
     // Since Vala compiles to C, we want our instance variable set last
     [CCode (instance_pos = -1)]
@@ -37,6 +49,11 @@ public class MainWindow : Gtk.Application {
     {
         // This function will be called when the "DLR" button gets clicked
         player.play(dlf);
+
+        broadcasts_tree_view.hide();
+        episodes_tree_view.hide();
+        favorites_tree_view.hide();
+        program_tree_view.show();
 
     }
 
@@ -46,6 +63,10 @@ public class MainWindow : Gtk.Application {
         // This function will be called when the "Nova" button gets clicked
         player.play(nova);
 
+        broadcasts_tree_view.hide();
+        episodes_tree_view.hide();
+        favorites_tree_view.hide();
+        program_tree_view.show();
     }
 
     [CCode (instance_pos = -1)]
@@ -53,6 +74,11 @@ public class MainWindow : Gtk.Application {
     {
         // This function will be called when the "Kultur" button gets clicked
         player.play(kultur);
+
+        broadcasts_tree_view.hide();
+        episodes_tree_view.hide();
+        favorites_tree_view.hide();
+        program_tree_view.show();
     }
 
 
@@ -79,9 +105,14 @@ public class MainWindow : Gtk.Application {
             popover_fav_menu.popdown();
         }
 
+        episodes_tree_view.hide();
+        program_tree_view.hide();
+        favorites_tree_view.hide();
 
+        broadcasts_tree_view.show();
+
+        //TODO move the initialisation of tree_view_columns to the initialisation of the tree_view
         if(broadcasts_tree_view.get_columns().length() == 0){
-
             //mock data for treeview
             var listmodel = new Gtk.ListStore(3, typeof(string), typeof(string), typeof(string));
 
@@ -120,6 +151,216 @@ public class MainWindow : Gtk.Application {
                 , broadcast_columns.FAVORITE, broadcasts_test_data[i].favorite_state);
             }
         }
+    }
+
+
+    [CCode (instance_pos = -1)]
+    public void on_favorites_button_clicked(Gtk.Button sender){
+        var is_popover_open = popover_fav_menu.get_visible();
+
+        if(is_popover_open == true){
+            popover_fav_menu.popdown();
+        }
+
+
+        broadcasts_tree_view.hide();
+        episodes_tree_view.hide();
+        program_tree_view.hide();
+
+        favorites_tree_view.show();
+
+        //TODO move the initialisation of tree_view_columns to the initialisation of the tree_view
+        if(favorites_tree_view.get_columns().length() == 0){
+
+            //mock data for treeview
+            var listmodel = new Gtk.ListStore(3, typeof(string), typeof(string), typeof(string));
+
+            favorites_tree_view.set_model(listmodel);
+
+            favorites_tree_view.insert_column_with_attributes(-1
+            ,"Station"
+            , new Gtk.CellRendererText()
+            , "text"
+            , broadcast_columns.STATION);
+
+            favorites_tree_view.insert_column_with_attributes(-1
+            , "Sendung"
+            , new Gtk.CellRendererText()
+            , "text"
+            , broadcast_columns.BROADCAST);
+
+            favorites_tree_view.insert_column_with_attributes(-1
+            , "Favorit"
+            , new Gtk.CellRendererText()
+            , "text"
+            , broadcast_columns.FAVORITE);
+
+
+            Broadcasts_test[] broadcasts_test_data = {
+                new Broadcasts_test("DLF", "Am Sonntag Morgen", "Ja"),
+                new Broadcasts_test("Nova", "Dein Sonntag", "Nein")
+            };
+
+            Gtk.TreeIter iter;
+            for(int i = 0; i < broadcasts_test_data.length; i++){
+                listmodel.append (out iter);
+                listmodel.set(iter
+                , broadcast_columns.STATION, broadcasts_test_data[i].station_name
+                , broadcast_columns.BROADCAST, broadcasts_test_data[i].broadcast_name
+                , broadcast_columns.FAVORITE, broadcasts_test_data[i].favorite_state);
+            }
+        }
+    }
+
+    [CCode (instance_pos = -1)]
+    public void on_broadcasts_tree_view_row_activated(Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column){
+        //index in broadcast array
+        //print(path.to_string());
+        //clicked column (for check on favorite)
+        //print(column.title);
+
+        //hides other tree_views and displays the episodes_tree_view
+        broadcasts_tree_view.hide();
+        favorites_tree_view.hide();
+        program_tree_view.hide();
+
+        episodes_tree_view.show();
+
+
+        if(episodes_tree_view.get_columns().length() == 0){
+
+            //mock data for treeview
+            var listmodel = new Gtk.ListStore(5
+            , typeof(string)
+            , typeof(string)
+            , typeof(string)
+            , typeof(string)
+            , typeof(string));
+
+            episodes_tree_view.set_model(listmodel);
+
+            episodes_tree_view.insert_column_with_attributes(-1
+            ,"Datum/Uhrzeit"
+            , new Gtk.CellRendererText()
+            , "text"
+            , episode_columns.TIMESTAMP);
+
+            episodes_tree_view.insert_column_with_attributes(-1
+            , "Sendung"
+            , new Gtk.CellRendererText()
+            , "text"
+            , episode_columns.BROADCAST);
+
+            episodes_tree_view.insert_column_with_attributes(-1
+            , "Episode"
+            , new Gtk.CellRendererText()
+            , "text"
+            , episode_columns.EPISODE);
+
+            episodes_tree_view.insert_column_with_attributes(-1
+            , "Autor"
+            , new Gtk.CellRendererText()
+            , "text"
+            , episode_columns.AUTHOR);
+
+            episodes_tree_view.insert_column_with_attributes(-1
+            , "Länge"
+            , new Gtk.CellRendererText()
+            , "text"
+            , episode_columns.DURATION);
+
+
+            Episodes_test[] episodes_test_data = {
+                new Episodes_test("25.05.2019 18:42", "Am Sonntag Morgen", "Abends um 18 Uhr", "Heinz", "4:34 min"),
+                new Episodes_test("25.05.2019 19:42", "Dein Sonntag", "Sonntags abend 19:42", "Eick", "3:12 min")
+            };
+
+            Gtk.TreeIter iter;
+            for(int i = 0; i < episodes_test_data.length; i++){
+                listmodel.append (out iter);
+                listmodel.set(iter
+                , episode_columns.TIMESTAMP, episodes_test_data[i].timestamp
+                , episode_columns.BROADCAST, episodes_test_data[i].broadcast_name
+                , episode_columns.EPISODE, episodes_test_data[i].episode_name
+                , episode_columns.AUTHOR, episodes_test_data[i].author
+                , episode_columns.DURATION, episodes_test_data[i].duration);
+            }
+        }
+    }
+
+    [CCode (instance_pos = -1)]
+    public void on_favorites_tree_view_row_activated(Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column){
+        broadcasts_tree_view.hide();
+        favorites_tree_view.hide();
+        episodes_tree_view.hide();
+        program_tree_view.show();
+
+         if(program_tree_view.get_columns().length() == 0){
+
+            //mock data for treeview
+            var listmodel = new Gtk.ListStore(5
+            , typeof(string)
+            , typeof(string)
+            , typeof(string)
+            , typeof(string)
+            , typeof(string));
+
+            program_tree_view.set_model(listmodel);
+
+            program_tree_view.insert_column_with_attributes(-1
+            ,"Datum/Uhrzeit"
+            , new Gtk.CellRendererText()
+            , "text"
+            , episode_columns.TIMESTAMP);
+
+            program_tree_view.insert_column_with_attributes(-1
+            , "Sendung"
+            , new Gtk.CellRendererText()
+            , "text"
+            , episode_columns.BROADCAST);
+
+            program_tree_view.insert_column_with_attributes(-1
+            , "Episode"
+            , new Gtk.CellRendererText()
+            , "text"
+            , episode_columns.EPISODE);
+
+            program_tree_view.insert_column_with_attributes(-1
+            , "Autor"
+            , new Gtk.CellRendererText()
+            , "text"
+            , episode_columns.AUTHOR);
+
+            program_tree_view.insert_column_with_attributes(-1
+            , "Länge"
+            , new Gtk.CellRendererText()
+            , "text"
+            , episode_columns.DURATION);
+
+
+            Episodes_test[] episodes_test_data = {
+                new Episodes_test("25.05.2019 18:42", "Am Sonntag Morgen", "Abends um 18 Uhr", "Heinz", "4:34 min"),
+                new Episodes_test("25.05.2019 19:42", "Dein Sonntag", "Sonntags abend 19:42", "Eick", "3:12 min")
+            };
+
+            Gtk.TreeIter iter;
+            for(int i = 0; i < episodes_test_data.length; i++){
+                listmodel.append (out iter);
+                listmodel.set(iter
+                , episode_columns.TIMESTAMP, episodes_test_data[i].timestamp
+                , episode_columns.BROADCAST, episodes_test_data[i].broadcast_name
+                , episode_columns.EPISODE, episodes_test_data[i].episode_name
+                , episode_columns.AUTHOR, episodes_test_data[i].author
+                , episode_columns.DURATION, episodes_test_data[i].duration);
+            }
+        }
+    }
+
+    [CCode (instance_pos = -1)]
+    public void on_episodes_tree_view_row_activated(Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column){
+        //TODO set selected episode as playable for the player
+        //index in the episode array
+        print(path.to_string());
     }
 
 
@@ -170,6 +411,9 @@ public class MainWindow : Gtk.Application {
         about_dialog = builder.get_object("about_dialog") as Gtk.Dialog;
         popover_fav_menu = builder.get_object("popover_fav_menu") as Gtk.PopoverMenu;
         broadcasts_tree_view = builder.get_object("broadcasts_tree_view") as Gtk.TreeView;
+        favorites_tree_view = builder.get_object("favorites_tree_view") as Gtk.TreeView;
+        program_tree_view = builder.get_object("program_tree_view") as Gtk.TreeView;
+        episodes_tree_view = builder.get_object("episodes_tree_view") as Gtk.TreeView;
         // Load CSS
         Gtk.CssProvider css_provider = new Gtk.CssProvider ();
         css_provider.load_from_resource("/com/github/keyndin/dlr/window.ui.css");
@@ -246,6 +490,22 @@ public class Broadcasts_test{
         this.station_name = station;
         this.broadcast_name = broadcast;
         this.favorite_state = favorite;
+    }
+}
+
+public class Episodes_test{
+    public string timestamp;
+    public string broadcast_name;
+    public string episode_name;
+    public string author;
+    public string duration;
+
+    public Episodes_test(string timestamp, string broadcast, string episode, string author, string duration){
+        this.timestamp = timestamp;
+        this.broadcast_name = broadcast;
+        this.episode_name = episode;
+        this.author = author;
+        this.duration = duration;
     }
 }
 
