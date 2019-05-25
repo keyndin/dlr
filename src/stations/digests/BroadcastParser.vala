@@ -3,15 +3,30 @@ public class BroadcastParser : Deserializable {
     public string uri { get; set; default = ""; }
 
     public override void parse() {
+
+        broadcasts = new Array<Broadcast>();
+
         // Get XML from URL and parse result
         base.get_from_uri(uri);
+        find_all_by_key("item");
+    }
 
-        //ToDo: Deserializable find_all_keys(string key)
-        //ToDo: Get broadcast_id from xml-item
-        //ToDo: Loop over all xml-items
-        //ToDo: Get Episodes per Broadcast
-        Broadcast broadcast = new Broadcast();
-        broadcast.broadcast_title = base.find_key("item");
-        broadcasts.append_val(broadcast);
+    public override void find_all_by_key(string key){
+
+        for (Xml.Node* iter = base.root->children; iter != null; iter = iter->next){
+            if (!base.is_element_node(iter)) {
+                // Spaces between tags are handled as nodes too, skip them
+                continue;
+            }
+
+            if (iter->name == key) {
+                var broadcast_id = int.parse(iter->get_prop("id"));
+                var broadcast = new Broadcast();
+                broadcast.broadcast_title = iter->get_content().normalize();
+                broadcast.broadcast_id = broadcast_id;
+                broadcasts.append_val(broadcast);
+            }
+
+        }
     }
 }

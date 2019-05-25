@@ -29,7 +29,6 @@ public class MainWindow : Gtk.Application {
     {
         // This function will be called when the "DLR" button gets clicked
         player.play(dlf);
-
     }
 
     [CCode (instance_pos = -1)]

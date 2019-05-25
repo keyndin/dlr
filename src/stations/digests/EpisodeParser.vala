@@ -4,11 +4,41 @@ public class EpisodeParser : Deserializable {
 
     public override void parse() {
         // Get XML from URL and parse result
+        episodes = new Array<Episode>();
         base.get_from_uri(uri);
+        find_all_by_key("item");
+    }
 
-        //ToDo: Loop over all xml-items and their children, parse children
-        Episode episode = new Episode();
-        episode.episode_description = base.find_key("item");
+    public override void find_all_by_key(string key){
+        for (Xml.Node* iter = base.root->children; iter != null; iter = iter->next){
+            if (!base.is_element_node(iter)) {
+                // Spaces between tags are handled as nodes too, skip them
+                continue;
+            }
 
+            if (iter->name == key) {
+                var episode = new Episode();
+                episode.episode_id = int.parse(iter->get_prop("id"));
+                episode.episode_url = iter->get_prop("url");
+                episode.episode_duration = int.parse(iter->get_prop("duration"));
+                episode.episode_timestamp = int.parse(iter->get_prop("timestamp"));
+
+                for (Xml.Node* child = iter->children; child != null; child = child->next){
+                    if (!base.is_element_node(iter)) {
+                        // Spaces between tags are handled as nodes too, skip them
+                        continue;
+                    }
+
+                    if(child->name == "title")
+                        episode.episode_description = child->get_content().normalize();
+                    if(child->name == "author")
+                        episode.episode_author = child->get_content().normalize();
+                    if(child->name == "sendung")
+                        episode.broadcast_id = int.parse(child->get_prop("id"));
+
+                }
+                episodes.append_val(episode);
+            }
+        }
     }
 }
