@@ -54,7 +54,6 @@ public class MainWindow : Gtk.Application {
         episodes_tree_view.hide();
         favorites_tree_view.hide();
         program_tree_view.show();
-
     }
 
     [CCode (instance_pos = -1)]

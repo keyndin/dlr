@@ -1,15 +1,21 @@
 public abstract class A_Station: I_Playable, GLib.Object{
+    public int station_id { public get; private set; }
     public E_StationNames? name { public get; private set; }
     public LiveRadioInfo live_radio_info { public get; protected set; }
     public BroadcastParser broadcast_parser { public get; protected set; }
+    public EpisodeParser episode_parser { public get; private set; }
 
     private string rpc_url = "https://srv.deutschlandradio.de/aodpreviewdata.1915.de.rpc?";
     private string broadcast_url = "https://srv.deutschlandradio.de/aodpreviewdata.1707.de.rpc?";
+    private string episode_url = "https://srv.deutschlandradio.de/aodlistaudio.1706.de.rpc?";
 
     protected A_Station(E_StationNames station_name){
         name = station_name;
+        station_id = name.get_id();
         live_radio_info = new LiveRadioInfo();
         broadcast_parser =  new BroadcastParser();
+        episode_parser = new EpisodeParser();
+        get_broadcasts();
     }
 
     public string get_stream_url(){
@@ -34,9 +40,30 @@ public abstract class A_Station: I_Playable, GLib.Object{
     }
 
     public void get_broadcasts(){
-        broadcast_parser.uri = broadcast_url+"drbm:station_id="+name.to_string();
+        broadcast_parser.uri = broadcast_url
+                               +"drbm:station_id="
+                               +station_id.to_string();
         broadcast_parser.parse();
         broadcast_parser.cleanup();
+    }
+
+    public void get_episodes(Broadcast broadcast){
+        episode_parser.uri = episode_url
+                             +"drau:station_id="
+                             +station_id.to_string()
+                             +"&drau:broadcast_id="
+                             +broadcast.broadcast_id.to_string();
+        episode_parser.parse();
+
+        broadcast.episodes = new Array<Episode>();
+        var episodes = episode_parser.episodes;
+
+        for(int i = 0; i < episodes.length; i++){
+            var episode = episodes.index(i);
+            broadcast.episodes.append_val(episode);
+        }
+
+        episode_parser.cleanup();
     }
 }
 

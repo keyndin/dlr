@@ -15,4 +15,8 @@ public class LiveRadioInfo : Deserializable {
         href = base.find_key("href");
         href_text = base.find_key("href_text");
     }
+
+    public override void find_all_by_key(string key){
+        // NOT YET IMPLEMENTED
+    }
 }
