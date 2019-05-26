@@ -15,6 +15,7 @@ public class SchemaIO:GLib.Object {
         catch(Error e){
             print("Error: %s\n", e.message);
         }
+        //settings.reset("favorite-broadcasts");
     }
 
     public void add_to_favorites(Broadcast broadcast){
@@ -37,6 +38,7 @@ public class SchemaIO:GLib.Object {
                     favorites.append_val(broadcast);
             }
         }
+
         return favorites;
     }
 
@@ -64,8 +66,11 @@ public class SchemaIO:GLib.Object {
     }
 
     public void consume_broadcasts(A_Station station){
-        var broadcasts = station.broadcast_parser.broadcasts;
-        broadcasts.append_vals(broadcasts, broadcasts.length);
+        var station_broadcasts = station.broadcast_parser.broadcasts;
+        for(int i = 0; i < station_broadcasts.length; i++){
+            var broadcast = station_broadcasts.index(i);
+            broadcasts.append_val(broadcast);
+        }
     }
 
 } 

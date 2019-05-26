@@ -21,6 +21,7 @@ public class MainWindow : Gtk.Application {
             flags: ApplicationFlags.FLAGS_NONE
         );
         schema = new SchemaIO();
+
         schema.consume_broadcasts(dlf);
         schema.consume_broadcasts(kultur);
         schema.consume_broadcasts(nova);
