@@ -468,11 +468,20 @@ audio-volume-medium-symbolic</property>
             <property name="orientation">vertical</property>
             <property name="spacing">2</property>
             <child>
-              <object class="GtkTreeView" id="broadcasts_tree_view">
+              <object class="GtkScrolledWindow">
+                <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <signal name="row-activated" handler="main_window_on_broadcasts_tree_view_row_activated" swapped="no"/>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection"/>
+                <property name="shadow_type">in</property>
+                <property name="max_content_height">350</property>
+                <property name="propagate_natural_height">True</property>
+                <child>
+                  <object class="GtkTreeView" id="broadcasts_tree_view">
+                    <property name="can_focus">True</property>
+                    <signal name="row-activated" handler="main_window_on_broadcasts_tree_view_row_activated" swapped="no"/>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
+                  </object>
                 </child>
               </object>
               <packing>
@@ -482,12 +491,21 @@ audio-volume-medium-symbolic</property>
               </packing>
             </child>
             <child>
-              <object class="GtkTreeView" id="program_tree_view">
+              <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <signal name="row-activated" handler="main_window_on_program_tree_view_row_activated" swapped="no"/>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection"/>
+                <property name="shadow_type">in</property>
+                <property name="max_content_height">350</property>
+                <property name="propagate_natural_height">True</property>
+                <child>
+                  <object class="GtkTreeView" id="program_tree_view">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="row-activated" handler="main_window_on_program_tree_view_row_activated" swapped="no"/>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
+                  </object>
                 </child>
               </object>
               <packing>
@@ -497,12 +515,21 @@ audio-volume-medium-symbolic</property>
               </packing>
             </child>
             <child>
-              <object class="GtkTreeView" id="episodes_tree_view">
+              <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <signal name="row-activated" handler="main_window_on_episodes_tree_view_row_activated" swapped="no"/>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection"/>
+                <property name="shadow_type">in</property>
+                <property name="max_content_height">350</property>
+                <property name="propagate_natural_height">True</property>
+                <child>
+                  <object class="GtkTreeView" id="episodes_tree_view">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="row-activated" handler="main_window_on_episodes_tree_view_row_activated" swapped="no"/>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
+                  </object>
                 </child>
               </object>
               <packing>
@@ -512,12 +539,21 @@ audio-volume-medium-symbolic</property>
               </packing>
             </child>
             <child>
-              <object class="GtkTreeView" id="favorites_tree_view">
+              <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <signal name="row-activated" handler="main_window_on_favorites_tree_view_row_activated" swapped="no"/>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection"/>
+                <property name="shadow_type">in</property>
+                <property name="max_content_height">350</property>
+                <property name="propagate_natural_height">True</property>
+                <child>
+                  <object class="GtkTreeView" id="favorites_tree_view">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="row-activated" handler="main_window_on_favorites_tree_view_row_activated" swapped="no"/>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
+                  </object>
                 </child>
               </object>
               <packing>
