@@ -13,12 +13,17 @@ public class MainWindow : Gtk.Application {
     private Kultur kultur = new Kultur();
     private Nova nova = new Nova();
 
+    public SchemaIO schema { public get; private set; }
+
     public MainWindow () {
         Object(
             application_id: "com.github.keyndin.dlr",
             flags: ApplicationFlags.FLAGS_NONE
         );
-        // this.Streamplayer = new StreamPlayer();
+        schema = new SchemaIO();
+        schema.consume_broadcasts(dlf);
+        schema.consume_broadcasts(kultur);
+        schema.consume_broadcasts(nova);
     }
 
 

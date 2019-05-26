@@ -19,6 +19,7 @@ dlr_sources = [
     'src/stations/digests/BroadcastParser.vala',
     'src/stations/digests/EpisodeParser.vala',
     'src/utils/Deserializable.vala',
+    'src/utils/SchemaIO.vala',
 ]
 
 dlr_dependencies = [
@@ -26,6 +27,7 @@ dlr_dependencies = [
     dependency('gstreamer-1.0'),
     dependency('libxml-2.0'),
     dependency('libsoup-2.4'),
+    dependency('gio-2.0')
 ]
 
 dlr_sources += gnome.compile_resources(
