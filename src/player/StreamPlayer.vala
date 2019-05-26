@@ -50,6 +50,21 @@ public class StreamPlayer:GLib.Object {
         player.volume = value;
     }
 
+    public void set_progress(double value){
+        //checks if the new value is different from the current value to prevent constant reloads
+        if(get_position() == (int64)value){
+            return;
+        }
+
+        player.seek_simple(Gst.Format.TIME, Gst.SeekFlags.FLUSH, (int64)value * Gst.SECOND);
+    }
+
+    public int64 get_position(){
+        int64 position;
+        player.query_position(Gst.Format.TIME, out position);
+        return position / Gst.SECOND;
+    }
+
     private void foreach_tag (Gst.TagList list, string tag) {
         switch (tag) {
         case "title":

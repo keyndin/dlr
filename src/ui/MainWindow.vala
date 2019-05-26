@@ -38,14 +38,14 @@ public class MainWindow : Gtk.Application {
     private Kultur kultur = new Kultur();
     private Nova nova = new Nova();
 
+    private Gtk.Scale progress_slider;
+
     public MainWindow () {
         Object(
             application_id: "com.github.keyndin.dlr",
             flags: ApplicationFlags.FLAGS_NONE
         );
         // this.Streamplayer = new StreamPlayer();
-
-
     }
 
     enum broadcast_columns{
@@ -274,24 +274,29 @@ public class MainWindow : Gtk.Application {
         GLib.Value station_column;
         view.get_model().get_value(iter, episode_columns.STATION, out station_column);
 
-        player.play(dlf.episode_parser.episodes.index(0));
-
         switch((string)station_column){
             case "dlf":
                 Episode episode = dlf.episode_parser.episodes.index(indices[0]);
                 player.play(episode);
+                progress_slider.set_range(0, episode.episode_duration);
+                        resume_progress_slider();
                 break;
             case "nova":
                 Episode episode = nova.episode_parser.episodes.index(indices[0]);
                 player.play(episode);
+                progress_slider.set_range(0, episode.episode_duration);
+                        resume_progress_slider();
                 break;
             case "kultur":
                 Episode episode = kultur.episode_parser.episodes.index(indices[0]);
                 player.play(episode);
+                progress_slider.set_range(0, episode.episode_duration);
+                        resume_progress_slider();
                 break;
             default:
                 break;
         }
+
     }
 
 
@@ -313,7 +318,7 @@ public class MainWindow : Gtk.Application {
     }
 
     private void fill_favorites_tree_view(){
-    // TODO replace this with favorite logic
+        // TODO replace this with favorite logic
         Array<Broadcast> broadcasts = nova.broadcast_parser.broadcasts;
 
         favorites_model.clear();
@@ -376,12 +381,34 @@ public class MainWindow : Gtk.Application {
             default:
                 break;
         }
+
+        resume_progress_slider();
+    }
+
+    private void resume_progress_slider(){
+        Timeout.add(1000, get_progress);
+    }
+
+    private bool get_progress(){
+        if(player.state == Gst.State.PLAYING){
+            //set value of the progress to current player position
+            progress_slider.set_value(player.get_position());
+            return true;
+        }
+        return false;
     }
 
     [CCode (instance_pos = -1)]
     public void on_volume_changed(Gtk.ScaleButton sender)
     {
         player.set_volume(sender.value);
+    }
+
+    [CCode (instance_pos = -1)]
+    public void on_progress_changed(Gtk.Scale sender){
+        //print("Changed " +sender.get_value().to_string());
+        player.set_progress(sender.get_value());
+        resume_progress_slider();
     }
 
     protected override void activate () {
@@ -400,6 +427,8 @@ public class MainWindow : Gtk.Application {
         episodes_tree_view = builder.get_object("episodes_tree_view") as Gtk.TreeView;
 
         initialize_tree_views();
+
+        progress_slider = builder.get_object("progress_slider") as Gtk.Scale;
 
         // Load CSS
         Gtk.CssProvider css_provider = new Gtk.CssProvider ();
@@ -550,6 +579,17 @@ public class MainWindow : Gtk.Application {
         , "text"
         , episode_columns.DURATION);
 
+    }
+
+    [CCode (instance_pos = -1)]
+    public string format_scale_value(Gtk.Scale sender){
+        //there is probably a better way to do this :(
+        double seconds = sender.get_value();
+        int format_hours = ((int)seconds / 3600);
+        int format_minutes = ((int)seconds / 60) - (3600 * format_hours);
+        int format_seconds = ((int)seconds) - (3600 * format_hours) - (60 * format_minutes);
+
+        return format_hours.to_string() + ":" + format_minutes.to_string() +  ":" + format_seconds.to_string();
     }
 }
 
