@@ -16,6 +16,7 @@ public abstract class A_Station: I_Playable, GLib.Object{
         broadcast_parser =  new BroadcastParser();
         episode_parser = new EpisodeParser();
         get_broadcasts();
+
     }
 
     public string get_stream_url(){
