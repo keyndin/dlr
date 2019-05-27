@@ -37,6 +37,7 @@ public class MainWindow : Gtk.Application {
     private DLF dlf = new DLF();
     private Kultur kultur = new Kultur();
     private Nova nova = new Nova();
+    private EpisodeQuery episode_query = new EpisodeQuery();
 
     private Gtk.Scale progress_slider;
     public SchemaIO schema { public get; private set; }
