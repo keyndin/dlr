@@ -6,6 +6,7 @@ public class Episode:GLib.Object, I_Playable{
     public string episode_description;
     public string episode_author;
     public int broadcast_id;
+    public string broadcast_title;
 
     public string get_stream_url(){
         return episode_url;
@@ -19,7 +20,7 @@ public class Episode:GLib.Object, I_Playable{
     }
 
     public string get_parent_name(){
-        return "Broadcastname";
+        return broadcast_title;
     }
 
 }

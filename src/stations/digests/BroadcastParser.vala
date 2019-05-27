@@ -1,17 +1,18 @@
 public class BroadcastParser : Deserializable {
     public Array<Broadcast> broadcasts { get; set; }
     public string uri { get; set; default = ""; }
+    public string station_display_name;
 
-    public override void parse(string station_display_name) {
+    public override void parse() {
 
         broadcasts = new Array<Broadcast>();
 
         // Get XML from URL and parse result
         base.get_from_uri(uri);
-        find_all_by_key("item", station_display_name);
+        find_all_by_key("item");
     }
 
-    public override void find_all_by_key(string key, string station_display_name){
+    public override void find_all_by_key(string key){
 
         for (Xml.Node* iter = base.root->children; iter != null; iter = iter->next){
             if (!base.is_element_node(iter)) {
