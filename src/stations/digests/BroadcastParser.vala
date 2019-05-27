@@ -1,6 +1,7 @@
 public class BroadcastParser : Deserializable {
     public Array<Broadcast> broadcasts { get; set; }
     public string uri { get; set; default = ""; }
+    public string station_display_name;
 
     public override void parse() {
 
@@ -24,6 +25,7 @@ public class BroadcastParser : Deserializable {
                 var broadcast = new Broadcast();
                 broadcast.broadcast_title = iter->get_content().normalize();
                 broadcast.broadcast_id = broadcast_id;
+                broadcast.station_display_name = station_display_name;
                 broadcasts.append_val(broadcast);
             }
 

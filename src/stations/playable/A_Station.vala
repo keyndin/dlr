@@ -14,6 +14,7 @@ public abstract class A_Station: I_Playable, GLib.Object{
         station_id = name.get_id();
         live_radio_info = new LiveRadioInfo();
         broadcast_parser =  new BroadcastParser();
+        broadcast_parser.station_display_name = name.to_display_string();
         episode_parser = new EpisodeParser();
         get_broadcasts();
 
@@ -61,6 +62,7 @@ public abstract class A_Station: I_Playable, GLib.Object{
 
         for(int i = 0; i < episodes.length; i++){
             var episode = episodes.index(i);
+            episode.broadcast_title = broadcast.broadcast_title;
             broadcast.episodes.append_val(episode);
         }
 
