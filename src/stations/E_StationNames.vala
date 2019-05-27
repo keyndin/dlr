@@ -12,6 +12,8 @@ public enum E_StationNames{
                 return "nova";
             case kultur:
                 return  "kultur";
+            case query:
+                return "query";
             default: assert_not_reached();
         }
     }
@@ -23,7 +25,9 @@ public enum E_StationNames{
             case nova:
                 return "Nova";
             case kultur:
-                return  "Kultur";
+                return "Kultur";
+            case query:
+                return "Query";
             default: assert_not_reached();
         }
     }
@@ -35,7 +39,9 @@ public enum E_StationNames{
             case nova:
                 return 1;
             case kultur:
-                return  3;
+                return 3;
+            case query:
+                return 42;
             default: assert_not_reached();
         }
     }

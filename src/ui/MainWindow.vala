@@ -33,6 +33,14 @@ public class MainWindow : Gtk.Application {
     , typeof(string)
     , typeof(string));
 
+    private Gtk.ListStore program_model = new Gtk.ListStore(6
+    , typeof(string)
+    , typeof(string)
+    , typeof(string)
+    , typeof(string)
+    , typeof(string)
+    , typeof(string));
+
     // Stations
     private DLF dlf = new DLF();
     private Kultur kultur = new Kultur();
@@ -82,6 +90,12 @@ public class MainWindow : Gtk.Application {
         program_tree_view.get_parent().show();
 
         fill_broadcast_tree_view(dlf);
+
+        //get_program for date.now()
+        var time = new DateTime.now();
+        //TODO second parameter for station
+        episode_query.query_episodes(time.format("%x"));
+        fill_program_tree_view();
     }
 
     [CCode (instance_pos = -1)]
@@ -96,6 +110,13 @@ public class MainWindow : Gtk.Application {
         program_tree_view.get_parent().show();
 
         fill_broadcast_tree_view(nova);
+
+        //get_program for date.now()
+        var time = new DateTime.now();
+        //TODO second parameter for station
+        episode_query.query_episodes(time.format("%x"));
+        fill_program_tree_view();
+
     }
 
     [CCode (instance_pos = -1)]
@@ -110,6 +131,12 @@ public class MainWindow : Gtk.Application {
         program_tree_view.get_parent().show();
 
         fill_broadcast_tree_view(kultur);
+
+        //get_program for date.now()
+        var time = new DateTime.now();
+        //TODO second parameter for station
+        episode_query.query_episodes(time.format("%x"));
+        fill_program_tree_view();
     }
 
 
@@ -348,7 +375,7 @@ public class MainWindow : Gtk.Application {
             episodes_model.set(iter
             , episode_columns.TIMESTAMP, time.format("%x  %X")
             , episode_columns.STATION, station.name.to_display_string()
-            , episode_columns.BROADCAST, broadcast.broadcast_title
+            , episode_columns.BROADCAST, episodes.index(i).broadcast_title
             , episode_columns.EPISODE, episodes.index(i).episode_description
             , episode_columns.AUTHOR, episodes.index(i).episode_author
             , episode_columns.DURATION, duration);
@@ -359,7 +386,40 @@ public class MainWindow : Gtk.Application {
     public void on_searchbar_activate(Gtk.Entry sender){
         // gets entered string
         //print(sender.get_text());
+        broadcasts_tree_view.get_parent().hide();
+        episodes_tree_view.get_parent().hide();
+        favorites_tree_view.get_parent().hide();
+        program_tree_view.get_parent().show();
+
         // TODO: Call search function with entered string
+        episode_query.query_episodes(sender.get_text());
+        fill_program_tree_view();
+    }
+
+    private void fill_program_tree_view(){
+       Array<Episode> episodes = episode_query.episode_parser.episodes;
+       print((episodes.index(0).episode_description));
+
+       program_model.clear();
+
+       Gtk.TreeIter iter;
+        for(int i = 0; i < episodes.length; i++){
+
+            //Gets DateTime from unix_timestamp
+            int64 timestamp = episodes.index(i).episode_timestamp;
+            var time = new DateTime.from_unix_utc(timestamp);
+
+            string duration = convert_seconds_to_hh_mm_ss(episodes.index(i).episode_duration);
+
+            program_model.append (out iter);
+            program_model.set(iter
+            , episode_columns.TIMESTAMP, time.format("%x  %X")
+            , episode_columns.STATION, "DLR"
+            , episode_columns.BROADCAST, episodes.index(i).broadcast_title
+            , episode_columns.EPISODE, episodes.index(i).episode_description
+            , episode_columns.AUTHOR, episodes.index(i).episode_author
+            , episode_columns.DURATION, duration);
+        }
     }
 
 
@@ -415,7 +475,6 @@ public class MainWindow : Gtk.Application {
 
     [CCode (instance_pos = -1)]
     public void on_progress_changed(Gtk.Scale sender){
-        //print("Changed " +sender.get_value().to_string());
         player.set_progress(sender.get_value());
         resume_progress_slider();
     }
@@ -553,7 +612,7 @@ public class MainWindow : Gtk.Application {
         //episodes_tree_view
         episodes_tree_view.set_model(episodes_model);
         episodes_tree_view.insert_column_with_attributes(-1
-        ,"Datum/Uhrzeit"
+        ,"Datum/Uhrzeit (UTC)"
         , new Gtk.CellRendererText()
         , "text"
         , episode_columns.TIMESTAMP);
@@ -588,6 +647,45 @@ public class MainWindow : Gtk.Application {
         , "text"
         , episode_columns.DURATION);
 
+
+
+        //program_tree_view
+        program_tree_view.set_model(program_model);
+        program_tree_view.insert_column_with_attributes(-1
+        ,"Datum/Uhrzeit (UTC)"
+        , new Gtk.CellRendererText()
+        , "text"
+        , episode_columns.TIMESTAMP);
+
+        program_tree_view.insert_column_with_attributes(-1
+        , "Station"
+        , new Gtk.CellRendererText()
+        , "text"
+        , episode_columns.STATION);
+
+        program_tree_view.insert_column_with_attributes(-1
+        , "Sendung"
+        , new Gtk.CellRendererText()
+        , "text"
+        , episode_columns.BROADCAST);
+
+        program_tree_view.insert_column_with_attributes(-1
+        , "Episode"
+        , new Gtk.CellRendererText()
+        , "text"
+        , episode_columns.EPISODE);
+
+        program_tree_view.insert_column_with_attributes(-1
+        , "Autor"
+        , new Gtk.CellRendererText()
+        , "text"
+        , episode_columns.AUTHOR);
+
+        program_tree_view.insert_column_with_attributes(-1
+        , "Länge"
+        , new Gtk.CellRendererText()
+        , "text"
+        , episode_columns.DURATION);
     }
 
     [CCode (instance_pos = -1)]
