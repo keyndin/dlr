@@ -22,7 +22,7 @@ public class SchemaIO:GLib.Object {
         print(broadcast.broadcast_title);
         string broadcast_id = broadcast.broadcast_id.to_string();
         string[] ids = settings.get_strv("favorite-broadcasts");
-        bool already_faved = check_for_duplicates(ids, broadcast_id);
+        bool already_faved = check_for_duplicates(broadcast_id);
         if(already_faved) return;
         ids += broadcast_id;
         settings.set_value("favorite-broadcasts", ids);
@@ -59,7 +59,8 @@ public class SchemaIO:GLib.Object {
         settings.set_value("favorite-broadcasts", ids);
     }
 
-    public bool check_for_duplicates(string[] ids, string id){
+    public bool check_for_duplicates(string id){
+        string[] ids = settings.get_strv("favorite-broadcasts");
         foreach(string val in ids){
             if(val == id) return true;
         }

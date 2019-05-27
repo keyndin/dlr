@@ -47,6 +47,8 @@ public class MainWindow : Gtk.Application {
     private Nova nova = new Nova();
     private EpisodeQuery episode_query = new EpisodeQuery();
 
+    private A_Station current_station;
+
     private Gtk.Scale progress_slider;
     public SchemaIO schema { public get; private set; }
 
@@ -83,7 +85,7 @@ public class MainWindow : Gtk.Application {
     {
         // This function will be called when the "DLR" button gets clicked
         player.play(dlf);
-
+        current_station = dlf;
         broadcasts_tree_view.get_parent().hide();
         episodes_tree_view.get_parent().hide();
         favorites_tree_view.get_parent().hide();
@@ -93,7 +95,6 @@ public class MainWindow : Gtk.Application {
 
         //get_program for date.now()
         var time = new DateTime.now();
-        //TODO second parameter for station
         dlf.daily_episodes(time);
         fill_program_tree_view(dlf);
     }
@@ -103,7 +104,7 @@ public class MainWindow : Gtk.Application {
     {
         // This function will be called when the "Nova" button gets clicked
         player.play(nova);
-
+        current_station = nova;
         broadcasts_tree_view.get_parent().hide();
         episodes_tree_view.get_parent().hide();
         favorites_tree_view.get_parent().hide();
@@ -113,10 +114,8 @@ public class MainWindow : Gtk.Application {
 
         //get_program for date.now()
         var time = new DateTime.now();
-        //TODO second parameter for station
         nova.daily_episodes(time);
         fill_program_tree_view(nova);
-
     }
 
     [CCode (instance_pos = -1)]
@@ -124,7 +123,7 @@ public class MainWindow : Gtk.Application {
     {
         // This function will be called when the "Kultur" button gets clicked
         player.play(kultur);
-
+        current_station = kultur;
         broadcasts_tree_view.get_parent().hide();
         episodes_tree_view.get_parent().hide();
         favorites_tree_view.get_parent().hide();
@@ -134,8 +133,6 @@ public class MainWindow : Gtk.Application {
 
         //get_program for date.now()
         var time = new DateTime.now();
-        //TODO second parameter for station
-        //episode_query.query_episodes(time.format("%x"));
         kultur.daily_episodes(time);
         fill_program_tree_view(kultur);
     }
@@ -202,18 +199,47 @@ public class MainWindow : Gtk.Application {
             GLib.Value station_column;
             view.get_model().get_value(iter, broadcast_columns.STATION, out station_column);
 
+            GLib.Value favorite_column;
+            view.get_model().get_value(iter, broadcast_columns.FAVORITE, out favorite_column);
+
+            //toggles favorite state
+            bool is_favorite;
+            if(favorite_column == "Ja"){
+                broadcasts_model.set_value(iter, broadcast_columns.FAVORITE, "Nein");
+                is_favorite = true;
+            }
+            else{
+                broadcasts_model.set_value(iter, broadcast_columns.FAVORITE, "Ja");
+                is_favorite = false;
+            }
+
             switch((string)station_column){
                 case "DLR":
                     Broadcast broadcast = dlf.broadcast_parser.broadcasts.index(indices[0]);
-                    schema.add_to_favorites(broadcast);
+                    if(is_favorite == true){
+                        schema.remove_from_favorites(broadcast);
+                    }
+                    else{
+                        schema.add_to_favorites(broadcast);
+                    }
                     break;
                 case "Nova":
                     Broadcast broadcast = nova.broadcast_parser.broadcasts.index(indices[0]);
-                    schema.add_to_favorites(broadcast);
+                    if(is_favorite == true){
+                        schema.remove_from_favorites(broadcast);
+                    }
+                    else{
+                        schema.add_to_favorites(broadcast);
+                    }
                     break;
                 case "Kultur":
                     Broadcast broadcast = kultur.broadcast_parser.broadcasts.index(indices[0]);
-                    schema.add_to_favorites(broadcast);
+                    if(is_favorite == true){
+                        schema.remove_from_favorites(broadcast);
+                    }
+                    else{
+                        schema.add_to_favorites(broadcast);
+                    }
                     break;
                 default:
                     break;
@@ -257,20 +283,32 @@ public class MainWindow : Gtk.Application {
         //index as int
         int[] indices = path.get_indices();
 
-        broadcasts_tree_view.get_parent().hide();
-        favorites_tree_view.get_parent().hide();
-        program_tree_view.get_parent().hide();
-
-        episodes_tree_view.get_parent().show();
-
         Gtk.TreeIter iter;
         view.get_model().get_iter(out iter, path);
         GLib.Value station_column;
         view.get_model().get_value(iter, broadcast_columns.STATION, out station_column);
 
-
         Broadcast broadcast = schema.get_favorites().index(indices[0]);
-        // TODO get station name
+
+        if(column.title == "Favorit"){
+
+            GLib.Value favorite_column;
+            view.get_model().get_value(iter, broadcast_columns.FAVORITE, out favorite_column);
+
+            //removes favorite from favorite list
+            if(favorite_column == "Ja"){
+                schema.remove_from_favorites(broadcast);
+                favorites_model.remove(ref iter);
+                fill_broadcast_tree_view(current_station);
+            }
+            return;
+        }
+
+        broadcasts_tree_view.get_parent().hide();
+        favorites_tree_view.get_parent().hide();
+        program_tree_view.get_parent().hide();
+        episodes_tree_view.get_parent().show();
+
         switch((string)station_column){
             case "DLR":
                 fill_episodes_tree_view(dlf, broadcast);
@@ -327,35 +365,35 @@ public class MainWindow : Gtk.Application {
     public void on_program_tree_view_row_activated(Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column)
     {
         //index as int
-        //int[] indices = path.get_indices();
+        int[] indices = path.get_indices();
 
         //get associated station
-        //Gtk.TreeIter iter;
-        //view.get_model().get_iter(out iter, path);
-        //GLib.Value station_column;
-        //view.get_model().get_value(iter, episode_columns.STATION, out station_column);
+        Gtk.TreeIter iter;
+        view.get_model().get_iter(out iter, path);
+        GLib.Value station_column;
+        view.get_model().get_value(iter, episode_columns.STATION, out station_column);
 
-        //switch((string)station_column){
-        //    case "DLR":
-        //        Episode episode = dlf.episode_parser.episodes.index(indices[0]);
-        //        player.play(episode);
-        //       progress_slider.set_range(0, episode.episode_duration);
-        //        resume_progress_slider();
-        //        break;
-        //    case "Nova":
-        //        Episode episode = nova.episode_parser.episodes.index(indices[0]);
-        //        player.play(episode);
-        //        progress_slider.set_range(0, episode.episode_duration);
-        //        resume_progress_slider();
-        //        break;
-        //    case "Kultur":
-        //        Episode episode = kultur.episode_parser.episodes.index(indices[0]);
-        //        player.play(episode);
-        //        progress_slider.set_range(0, episode.episode_duration);
-        //        resume_progress_slider();
-        //        break;
-        //    default:
-        //        break;
+        switch((string)station_column){
+            case "DLR":
+                Episode episode = dlf.episode_parser.episodes.index(indices[0]);
+                player.play(episode);
+                progress_slider.set_range(0, episode.episode_duration);
+                resume_progress_slider();
+                break;
+            case "Nova":
+                Episode episode = nova.episode_parser.episodes.index(indices[0]);
+                player.play(episode);
+                progress_slider.set_range(0, episode.episode_duration);
+                resume_progress_slider();
+                break;
+            case "Kultur":
+                Episode episode = kultur.episode_parser.episodes.index(indices[0]);
+                player.play(episode);
+                progress_slider.set_range(0, episode.episode_duration);
+                resume_progress_slider();
+                break;
+            default:
+                break;
         }
     }
 
@@ -365,14 +403,17 @@ public class MainWindow : Gtk.Application {
         Array<Broadcast> broadcasts = station.broadcast_parser.broadcasts;
 
         broadcasts_model.clear();
-        //TODO get favorie state;
+
         Gtk.TreeIter iter;
         for(int i = 0; i < broadcasts.length; i++){
+            //checks whether a podcast is already_faved
+            bool is_favorite = schema.check_for_duplicates(broadcasts.index(i).broadcast_id.to_string());
+
             broadcasts_model.append (out iter);
             broadcasts_model.set(iter
             , broadcast_columns.STATION, station.name.to_display_string()
             , broadcast_columns.BROADCAST, broadcasts.index(i).broadcast_title
-            , broadcast_columns.FAVORITE, "Nein");
+            , broadcast_columns.FAVORITE, is_favorite ? "Ja" : "Nein");
         }
     }
 
@@ -381,7 +422,7 @@ public class MainWindow : Gtk.Application {
 
         favorites_model.clear();
 
-        //TODO set favorite dynamically
+        //TODO set favorite dynamically on favorite row activated
         Gtk.TreeIter iter;
         for(int i = 0; i < broadcasts.length; i++){
             favorites_model.append(out iter);
@@ -680,6 +721,14 @@ public class MainWindow : Gtk.Application {
         , new Gtk.CellRendererText()
         , "text"
         , episode_columns.DURATION);
+
+
+        //TODO Set max_width for columns
+        //List<Gtk.TreeViewColumn> episode_column_list = episodes_tree_view.get_columns();
+        //foreach(Gtk.TreeViewColumn column in episode_column_list){
+         //   print("column | ");
+         //   column.max_width = 100;
+        //}
 
 
 
