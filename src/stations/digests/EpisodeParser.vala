@@ -30,7 +30,7 @@ public class EpisodeParser : Deserializable {
                         break;
                     case 1: episode.station_display_name = "Nova";
                         break;
-                    case 2: episode.station_display_name = "Kultur";
+                    case 3: episode.station_display_name = "Kultur";
                         break;
                     default: assert_not_reached();
                 }
