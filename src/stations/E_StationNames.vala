@@ -2,7 +2,7 @@ public enum E_StationNames{
     dlf = 4,
     nova = 1,
     kultur = 3,
-    query = 42;
+    query = -1;
 
     public string to_string(){
         switch(this){
@@ -12,6 +12,8 @@ public enum E_StationNames{
                 return "nova";
             case kultur:
                 return  "kultur";
+            case query:
+                return "suche";
             default: assert_not_reached();
         }
     }
@@ -24,6 +26,8 @@ public enum E_StationNames{
                 return "Nova";
             case kultur:
                 return  "Kultur";
+                case query:
+                return "Suche";
             default: assert_not_reached();
         }
     }
@@ -36,6 +40,8 @@ public enum E_StationNames{
                 return 1;
             case kultur:
                 return  3;
+            case query:
+                return -1;
             default: assert_not_reached();
         }
     }
@@ -48,6 +54,8 @@ public enum E_StationNames{
                 return "Deutschlandfunk Nova";
             case kultur:
                 return "Deutschlandfunk Kultur";
+            case query:
+                return "Sendungen suchen: ";
             default: assert_not_reached();
         }
     }
