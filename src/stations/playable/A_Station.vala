@@ -63,7 +63,8 @@ public abstract class A_Station: I_Playable, GLib.Object{
 
         for(int i = 0; i < episodes.length; i++){
             var episode = episodes.index(i);
-            episode.broadcast_title = broadcast.broadcast_title;
+            episode.station_display_name = name.to_display_string();
+
             broadcast.episodes.append_val(episode);
         }
 

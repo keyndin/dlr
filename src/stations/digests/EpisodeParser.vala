@@ -33,8 +33,13 @@ public class EpisodeParser : Deserializable {
                         episode.episode_description = child->get_content().normalize();
                     if(child->name == "author")
                         episode.episode_author = child->get_content().normalize();
-                    if(child->name == "sendung")
+                    if(child->name == "sendung"){
                         episode.broadcast_id = int.parse(child->get_prop("id"));
+                        var broadcast_title = child->get_content().normalize();
+                        if(broadcast_title != "") episode.broadcast_title = broadcast_title;
+                        else
+                            episode.broadcast_title = "Beitrag";
+                    }
 
                 }
                 episodes.append_val(episode);
