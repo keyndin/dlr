@@ -2,6 +2,100 @@
 <!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkDialog">
+    <property name="can_focus">False</property>
+    <property name="type_hint">dialog</property>
+    <child>
+      <placeholder/>
+    </child>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="close_dialog">
+                <property name="label" translatable="yes">Close</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Dialog</property>
+            <property name="justify">fill</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkAboutDialog" id="about_dialog">
+    <property name="can_focus">False</property>
+    <property name="window_position">center</property>
+    <property name="type_hint">dialog</property>
+    <property name="program_name">Project Aircheck</property>
+    <property name="version">1.0.0</property>
+    <property name="copyright" translatable="yes">Lobster - License SIL Open Font License </property>
+    <property name="authors">Marcel Malik
+Oliver Brandau
+Florian Lang
+Daniel Lauer</property>
+    <property name="logo">static/project_aircheck.png</property>
+    <property name="license_type">gpl-3-0</property>
+    <child>
+      <placeholder/>
+    </child>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="about_dialog_box">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can_focus">False</property>
+            <property name="layout_style">center</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkImage" id="about_icon">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-about</property>
+  </object>
   <object class="GtkImage" id="next_icon">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -13,6 +107,9 @@
     <property name="can_focus">False</property>
     <property name="stock">gtk-media-play</property>
     <property name="icon_size">6</property>
+    <style>
+      <class name="loading-spinner"/>
+    </style>
   </object>
   <object class="GtkImage" id="previous_icon">
     <property name="visible">True</property>
@@ -25,7 +122,6 @@
     <property name="default_width">800</property>
     <property name="default_height">600</property>
     <property name="icon_name">audio-input-microphone</property>
-    <property name="show_menubar">False</property>
     <signal name="destroy" handler="main_window_on_destroy" swapped="no"/>
     <child type="titlebar">
       <placeholder/>
@@ -47,14 +143,14 @@
                 <property name="spacing">4</property>
                 <property name="layout_style">start</property>
                 <child>
-                  <object class="GtkButton" id="fav_button">
-                    <property name="label">gtk-index</property>
+                  <object class="GtkModelButton" id="popover_fav_button">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="relief">none</property>
-                    <property name="use_stock">True</property>
-                    <property name="always_show_image">True</property>
+                    <property name="text" translatable="yes">Menü</property>
+                    <property name="menu_name">popover_fav_menu</property>
+                    <property name="centered">True</property>
+                    <signal name="clicked" handler="main_window_on_open_popover_menu_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -63,7 +159,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="dlrbutton">
+                  <object class="GtkButton" id="dlr_button">
                     <property name="label" translatable="yes">DLR</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -73,7 +169,7 @@
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
@@ -87,7 +183,7 @@
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -96,14 +192,30 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <signal name="clicked" handler="main_window_on_kulturbutton_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                   </packing>
                 </child>
               </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="menu_button">
+                <property name="label">gtk-about</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <property name="always_show_image">True</property>
+                <signal name="clicked" handler="main_window_on_open_about_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="pack_type">end</property>
+                <property name="position">1</property>
+              </packing>
             </child>
             <child>
               <object class="GtkSearchEntry" id="searchbar">
@@ -112,12 +224,16 @@
                 <property name="primary_icon_name">edit-find-symbolic</property>
                 <property name="primary_icon_activatable">False</property>
                 <property name="primary_icon_sensitive">False</property>
+                <signal name="activate" handler="main_window_on_searchbar_activate" swapped="no"/>
               </object>
               <packing>
                 <property name="pack_type">end</property>
-                <property name="position">3</property>
+                <property name="position">2</property>
               </packing>
             </child>
+            <style>
+              <class name="media_controls"/>
+            </style>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -206,18 +322,22 @@
                 <property name="margin_top">8</property>
                 <property name="margin_bottom">9</property>
                 <child>
-                  <object class="GtkProgressBar">
+                  <object class="GtkScale" id="progress_slider">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="valign">center</property>
-                    <property name="margin_right">12</property>
-                    <property name="hexpand">False</property>
-                    <property name="vexpand">False</property>
+                    <property name="can_focus">True</property>
+                    <property name="show_fill_level">True</property>
+                    <property name="restrict_to_fill_level">False</property>
+                    <property name="fill_level">0</property>
+                    <property name="round_digits">1</property>
+                    <property name="digits">0</property>
+                    <property name="has_origin">False</property>
+                    <signal name="format-value" handler="main_window_format_scale_value" swapped="no"/>
+                    <signal name="value-changed" handler="main_window_on_progress_changed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
@@ -268,7 +388,26 @@ audio-volume-medium-symbolic</property>
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkButton">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="halign">end</property>
+                <property name="valign">center</property>
+                <property name="margin_left">24</property>
+                <property name="margin_right">24</property>
+                <property name="image">about_icon</property>
+                <property name="relief">none</property>
+                <property name="image_position">right</property>
+                <property name="always_show_image">True</property>
+                <style>
+                  <class name="round"/>
+                </style>
+              </object>
+              <packing>
+                <property name="left_attach">2</property>
+                <property name="top_attach">0</property>
+              </packing>
             </child>
             <child>
               <placeholder/>
@@ -327,7 +466,161 @@ audio-volume-medium-symbolic</property>
             <property name="position">2</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkBox" id="tree_view_container">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
+            <property name="spacing">2</property>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="shadow_type">in</property>
+                <property name="max_content_height">350</property>
+                <property name="propagate_natural_height">True</property>
+                <child>
+                  <object class="GtkTreeView" id="broadcasts_tree_view">
+                    <property name="can_focus">True</property>
+                    <signal name="row-activated" handler="main_window_on_broadcasts_tree_view_row_activated" swapped="no"/>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="shadow_type">in</property>
+                <property name="max_content_height">350</property>
+                <property name="propagate_natural_height">True</property>
+                <child>
+                  <object class="GtkTreeView" id="program_tree_view">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="row-activated" handler="main_window_on_program_tree_view_row_activated" swapped="no"/>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="shadow_type">in</property>
+                <property name="max_content_height">350</property>
+                <property name="propagate_natural_height">True</property>
+                <child>
+                  <object class="GtkTreeView" id="episodes_tree_view">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="row-activated" handler="main_window_on_episodes_tree_view_row_activated" swapped="no"/>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="shadow_type">in</property>
+                <property name="max_content_height">350</property>
+                <property name="propagate_natural_height">True</property>
+                <child>
+                  <object class="GtkTreeView" id="favorites_tree_view">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="row-activated" handler="main_window_on_favorites_tree_view_row_activated" swapped="no"/>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
       </object>
+    </child>
+  </object>
+  <object class="GtkPopoverMenu" id="popover_fav_menu">
+    <property name="can_focus">False</property>
+    <property name="relative_to">popover_fav_button</property>
+    <property name="modal">False</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkButton" id="favorites_button">
+            <property name="label" translatable="yes">Favoriten</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="valign">center</property>
+            <signal name="clicked" handler="main_window_on_favorites_button_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="broadcasts_button">
+            <property name="label" translatable="yes">Sendungen</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="valign">center</property>
+            <signal name="clicked" handler="main_window_on_broadcasts_button_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="submenu">submenu0</property>
+        <property name="position">1</property>
+      </packing>
     </child>
   </object>
 </interface>

@@ -81,6 +81,7 @@ public abstract class A_Station: I_Playable, GLib.Object{
 
     public void daily_episodes(DateTime date){
         string day = date.format("%x");
+
         episode_parser.uri = episode_url
                              +"drau:station_id="
                              +station_id.to_string()

@@ -1,3 +1,18 @@
 .media_controlls > button {
   border-radius: 15px;
 }
+
+.round {
+  border-radius: 30px;
+}
+
+/* @keyframes spin {
+  to { -gtk-icon-transform: rotate(1turn); }
+}
+
+.loading-spinner {
+  animation-name: spin;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+} */
