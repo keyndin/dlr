@@ -796,27 +796,27 @@ public class MainWindow : Gtk.Application {
     }
 
     private string convert_seconds_to_hh_mm_ss(int seconds){
-        //there is probably a way better way to do this D:
-        int format_hours = (seconds / 3600);
-        int format_minutes = (seconds / 60) - (3600 * format_hours);
-        int format_seconds = (seconds) - (3600 * format_hours) - (60 * format_minutes);
+        int hours = seconds / 3600;
+        seconds %= 3600;
+        int minutes = seconds / 60;
+        seconds %= 60;
 
         string min;
-        if(format_minutes.to_string().length == 1){
-            min = "0" + format_minutes.to_string();
+        if(minutes.to_string().length == 1){
+            min = "0" + minutes.to_string();
         }
         else{
-            min = format_minutes.to_string();
+            min = minutes.to_string();
         }
 
         string sec;
-        if(format_seconds.to_string().length == 1){
-            sec = "0" + format_seconds.to_string();
+        if(seconds.to_string().length == 1){
+            sec = "0" + seconds.to_string();
         }
         else{
-            sec = format_seconds.to_string();
+            sec = seconds.to_string();
         }
 
-        return format_hours.to_string() + ":" + min +  ":" + sec;
+        return hours.to_string() + ":" + min +  ":" + sec;
     }
 }
