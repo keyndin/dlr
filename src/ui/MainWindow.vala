@@ -94,8 +94,8 @@ public class MainWindow : Gtk.Application {
         //get_program for date.now()
         var time = new DateTime.now();
         //TODO second parameter for station
-        episode_query.query_episodes(time.format("%x"));
-        fill_program_tree_view();
+        dlf.daily_episodes(time);
+        fill_program_tree_view(dlf);
     }
 
     [CCode (instance_pos = -1)]
@@ -114,8 +114,8 @@ public class MainWindow : Gtk.Application {
         //get_program for date.now()
         var time = new DateTime.now();
         //TODO second parameter for station
-        episode_query.query_episodes(time.format("%x"));
-        fill_program_tree_view();
+        nova.daily_episodes(time);
+        fill_program_tree_view(nova);
 
     }
 
@@ -135,8 +135,9 @@ public class MainWindow : Gtk.Application {
         //get_program for date.now()
         var time = new DateTime.now();
         //TODO second parameter for station
-        episode_query.query_episodes(time.format("%x"));
-        fill_program_tree_view();
+        //episode_query.query_episodes(time.format("%x"));
+        kultur.daily_episodes(time);
+        fill_program_tree_view(kultur);
     }
 
 
@@ -322,6 +323,41 @@ public class MainWindow : Gtk.Application {
 
     }
 
+    [CCode (instance_pos = -1)]
+    public void on_program_tree_view_row_activated(Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column)
+    {
+        //index as int
+        //int[] indices = path.get_indices();
+
+        //get associated station
+        //Gtk.TreeIter iter;
+        //view.get_model().get_iter(out iter, path);
+        //GLib.Value station_column;
+        //view.get_model().get_value(iter, episode_columns.STATION, out station_column);
+
+        //switch((string)station_column){
+        //    case "DLR":
+        //        Episode episode = dlf.episode_parser.episodes.index(indices[0]);
+        //        player.play(episode);
+        //       progress_slider.set_range(0, episode.episode_duration);
+        //        resume_progress_slider();
+        //        break;
+        //    case "Nova":
+        //        Episode episode = nova.episode_parser.episodes.index(indices[0]);
+        //        player.play(episode);
+        //        progress_slider.set_range(0, episode.episode_duration);
+        //        resume_progress_slider();
+        //        break;
+        //    case "Kultur":
+        //        Episode episode = kultur.episode_parser.episodes.index(indices[0]);
+        //        player.play(episode);
+        //        progress_slider.set_range(0, episode.episode_duration);
+        //        resume_progress_slider();
+        //        break;
+        //    default:
+        //        break;
+        }
+    }
 
     private void fill_broadcast_tree_view(A_Station station){
         station.get_broadcasts();
@@ -393,13 +429,11 @@ public class MainWindow : Gtk.Application {
 
         // TODO: Call search function with entered string
         episode_query.query_episodes(sender.get_text());
-        fill_program_tree_view();
+        fill_program_tree_view(episode_query);
     }
 
-    private void fill_program_tree_view(){
-       Array<Episode> episodes = episode_query.episode_parser.episodes;
-       //print((episodes.index(0).episode_description));
-
+    private void fill_program_tree_view(A_Station station){
+       Array<Episode> episodes = station.episode_parser.episodes;
        program_model.clear();
 
        Gtk.TreeIter iter;
@@ -414,7 +448,7 @@ public class MainWindow : Gtk.Application {
             program_model.append (out iter);
             program_model.set(iter
             , episode_columns.TIMESTAMP, time.format("%x  %X")
-            , episode_columns.STATION, "DLR"
+            , episode_columns.STATION, episodes.index(i).station_display_name
             , episode_columns.BROADCAST, episodes.index(i).broadcast_title
             , episode_columns.EPISODE, episodes.index(i).episode_description
             , episode_columns.AUTHOR, episodes.index(i).episode_author

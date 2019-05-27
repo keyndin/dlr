@@ -2,7 +2,7 @@ public class Episode:GLib.Object, I_Playable{
     public int episode_id;
     public string episode_url;
     public int episode_duration;
-    public int episode_timestamp; //ToDo: DateTime from_unix_utc(episode_timestamp)
+    public int episode_timestamp;
     public string episode_description;
     public string episode_author;
     public int broadcast_id;
