@@ -18,7 +18,7 @@ public enum E_StationNames{
     public string to_display_string(){
         switch(this){
             case dlf:
-                return "DLF";
+                return "DLR";
             case nova:
                 return "Nova";
             case kultur:

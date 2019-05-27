@@ -206,15 +206,15 @@ public class MainWindow : Gtk.Application {
         view.get_model().get_value(iter, broadcast_columns.STATION, out station_column);
 
         switch((string)station_column){
-            case "dlf":
+            case "DLR":
                 Broadcast broadcast = dlf.broadcast_parser.broadcasts.index(indices[0]);
                 fill_episodes_tree_view(dlf, broadcast);
                 break;
-            case "nova":
+            case "Nova":
                 Broadcast broadcast = nova.broadcast_parser.broadcasts.index(indices[0]);
                 fill_episodes_tree_view(nova, broadcast);
                 break;
-            case "kultur":
+            case "Kultur":
                 Broadcast broadcast = kultur.broadcast_parser.broadcasts.index(indices[0]);
                 fill_episodes_tree_view(kultur, broadcast);
                 break;
@@ -243,13 +243,13 @@ public class MainWindow : Gtk.Application {
         Broadcast broadcast = schema.get_favorites().index(indices[0]);
         // TODO get station name
         switch((string)station_column){
-            case "dlf":
+            case "DLR":
                 fill_episodes_tree_view(dlf, broadcast);
                 break;
-            case "nova":
+            case "Nova":
                 fill_episodes_tree_view(nova, broadcast);
                 break;
-            case "kultur":
+            case "Kultur":
                 fill_episodes_tree_view(kultur, broadcast);
                 break;
             default:
@@ -270,23 +270,23 @@ public class MainWindow : Gtk.Application {
         view.get_model().get_value(iter, episode_columns.STATION, out station_column);
 
         switch((string)station_column){
-            case "dlf":
+            case "DLR":
                 Episode episode = dlf.episode_parser.episodes.index(indices[0]);
                 player.play(episode);
                 progress_slider.set_range(0, episode.episode_duration);
-                        resume_progress_slider();
+                resume_progress_slider();
                 break;
-            case "nova":
+            case "Nova":
                 Episode episode = nova.episode_parser.episodes.index(indices[0]);
                 player.play(episode);
                 progress_slider.set_range(0, episode.episode_duration);
-                        resume_progress_slider();
+                resume_progress_slider();
                 break;
-            case "kultur":
+            case "Kultur":
                 Episode episode = kultur.episode_parser.episodes.index(indices[0]);
                 player.play(episode);
                 progress_slider.set_range(0, episode.episode_duration);
-                        resume_progress_slider();
+                resume_progress_slider();
                 break;
             default:
                 break;
@@ -306,7 +306,7 @@ public class MainWindow : Gtk.Application {
         for(int i = 0; i < broadcasts.length; i++){
             broadcasts_model.append (out iter);
             broadcasts_model.set(iter
-            , broadcast_columns.STATION, station.name.to_string()
+            , broadcast_columns.STATION, station.name.to_display_string()
             , broadcast_columns.BROADCAST, broadcasts.index(i).broadcast_title
             , broadcast_columns.FAVORITE, "Nein");
         }
@@ -316,13 +316,13 @@ public class MainWindow : Gtk.Application {
         Array<Broadcast> broadcasts = schema.get_favorites();
 
         favorites_model.clear();
-        //TODO set station to broadcast station;
+
         //TODO set favorite dynamically
         Gtk.TreeIter iter;
         for(int i = 0; i < broadcasts.length; i++){
             favorites_model.append(out iter);
             favorites_model.set(iter
-            , broadcast_columns.STATION, "dlf"
+            , broadcast_columns.STATION, broadcasts.index(i).station_display_name
             , broadcast_columns.BROADCAST, broadcasts.index(i).broadcast_title
             , broadcast_columns.FAVORITE, "Ja");
         }
@@ -346,12 +346,19 @@ public class MainWindow : Gtk.Application {
             episodes_model.append (out iter);
             episodes_model.set(iter
             , episode_columns.TIMESTAMP, time.format("%x  %X")
-            , episode_columns.STATION, station.name.to_string()
+            , episode_columns.STATION, station.name.to_display_string()
             , episode_columns.BROADCAST, broadcast.broadcast_title
             , episode_columns.EPISODE, episodes.index(i).episode_description
             , episode_columns.AUTHOR, episodes.index(i).episode_author
             , episode_columns.DURATION, duration);
         }
+    }
+
+    [CCode (instance_pos = -1)]
+    public void on_searchbar_activate(Gtk.Entry sender){
+        // gets entered string
+        //print(sender.get_text());
+        // TODO: Call search function with entered string
     }
 
 
@@ -365,7 +372,6 @@ public class MainWindow : Gtk.Application {
     [CCode (instance_pos = -1)]
     public void on_destroy(Gtk.Button sender)
     {
-        // This function will be called when the "DLR" button gets clicked
         player.stop();
         Gtk.main_quit();
     }
