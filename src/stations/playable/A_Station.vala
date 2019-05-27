@@ -44,7 +44,8 @@ public abstract class A_Station: I_Playable, GLib.Object{
         broadcast_parser.uri = broadcast_url
                                +"drbm:station_id="
                                +station_id.to_string();
-        broadcast_parser.parse();
+        var station_display_name = name.to_display_string();
+        broadcast_parser.parse(station_display_name);
         broadcast_parser.cleanup();
     }
 
