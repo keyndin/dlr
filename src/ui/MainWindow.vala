@@ -373,28 +373,11 @@ public class MainWindow : Gtk.Application {
         GLib.Value station_column;
         view.get_model().get_value(iter, episode_columns.STATION, out station_column);
 
-        switch((string)station_column){
-            case "DLR":
-                Episode episode = dlf.episode_parser.episodes.index(indices[0]);
-                player.play(episode);
-                progress_slider.set_range(0, episode.episode_duration);
-                resume_progress_slider();
-                break;
-            case "Nova":
-                Episode episode = nova.episode_parser.episodes.index(indices[0]);
-                player.play(episode);
-                progress_slider.set_range(0, episode.episode_duration);
-                resume_progress_slider();
-                break;
-            case "Kultur":
-                Episode episode = kultur.episode_parser.episodes.index(indices[0]);
-                player.play(episode);
-                progress_slider.set_range(0, episode.episode_duration);
-                resume_progress_slider();
-                break;
-            default:
-                break;
-        }
+        Episode episode = episode_query.episode_parser.episodes.index(indices[0]);
+        player.play(episode);
+        progress_slider.set_range(0, episode.episode_duration);
+        resume_progress_slider();
+
     }
 
     private void fill_broadcast_tree_view(A_Station station){

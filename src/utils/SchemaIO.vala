@@ -19,7 +19,6 @@ public class SchemaIO:GLib.Object {
     }
 
     public void add_to_favorites(Broadcast broadcast){
-        print(broadcast.broadcast_title);
         string broadcast_id = broadcast.broadcast_id.to_string();
         string[] ids = settings.get_strv("favorite-broadcasts");
         bool already_faved = check_for_duplicates(broadcast_id);
