@@ -78,5 +78,19 @@ public abstract class A_Station: I_Playable, GLib.Object{
         episode_parser.parse();
         episode_parser.cleanup();
     }
+
+    public void daily_episodes(DateTime date){
+        string day = date.format("%x");
+        episode_parser.uri = episode_url
+                             +"drau:station_id="
+                             +station_id.to_string()
+                             +"&drau:from="
+                             +day
+                             +"&drau:to="
+                             +day
+                             +"&drau:limit=1000";
+        episode_parser.parse();
+        episode_parser.cleanup();
+    }
 }
 
