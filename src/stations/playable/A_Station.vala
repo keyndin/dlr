@@ -8,6 +8,7 @@ public abstract class A_Station: I_Playable, GLib.Object{
     private string rpc_url = "https://srv.deutschlandradio.de/aodpreviewdata.1915.de.rpc?";
     private string broadcast_url = "https://srv.deutschlandradio.de/aodpreviewdata.1707.de.rpc?";
     private string episode_url = "https://srv.deutschlandradio.de/aodlistaudio.1706.de.rpc?";
+    private string search_url = "https://srv.deutschlandradio.de/aodlistaudio.1706.de.rpc?drau:searchterm=";
 
     protected A_Station(E_StationNames station_name){
         name = station_name;
@@ -17,6 +18,7 @@ public abstract class A_Station: I_Playable, GLib.Object{
         broadcast_parser.station_display_name = name.to_display_string();
         episode_parser = new EpisodeParser();
         get_broadcasts();
+
     }
 
     public string get_stream_url(){
@@ -61,10 +63,17 @@ public abstract class A_Station: I_Playable, GLib.Object{
 
         for(int i = 0; i < episodes.length; i++){
             var episode = episodes.index(i);
-            episode.broadcast_title = broadcast.broadcast_title;
+            episode.station_display_name = name.to_display_string();
+
             broadcast.episodes.append_val(episode);
         }
 
+        episode_parser.cleanup();
+    }
+
+    public void query_episodes(string search_term){
+        episode_parser.uri = search_url + search_term;
+        episode_parser.parse();
         episode_parser.cleanup();
     }
 }
