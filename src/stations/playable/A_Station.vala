@@ -72,7 +72,9 @@ public abstract class A_Station: I_Playable, GLib.Object{
     }
 
     public void query_episodes(string search_term){
-        episode_parser.uri = search_url + search_term;
+        episode_parser.uri = search_url
+                             +search_term
+                             +"&drau:limit=1000";
         episode_parser.parse();
         episode_parser.cleanup();
     }
