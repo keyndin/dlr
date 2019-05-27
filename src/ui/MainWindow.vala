@@ -202,15 +202,15 @@ public class MainWindow : Gtk.Application {
             view.get_model().get_value(iter, broadcast_columns.STATION, out station_column);
 
             switch((string)station_column){
-                case "dlf":
+                case "DLR":
                     Broadcast broadcast = dlf.broadcast_parser.broadcasts.index(indices[0]);
                     schema.add_to_favorites(broadcast);
                     break;
-                case "nova":
+                case "Nova":
                     Broadcast broadcast = nova.broadcast_parser.broadcasts.index(indices[0]);
                     schema.add_to_favorites(broadcast);
                     break;
-                case "kultur":
+                case "Kultur":
                     Broadcast broadcast = kultur.broadcast_parser.broadcasts.index(indices[0]);
                     schema.add_to_favorites(broadcast);
                     break;
@@ -398,7 +398,7 @@ public class MainWindow : Gtk.Application {
 
     private void fill_program_tree_view(){
        Array<Episode> episodes = episode_query.episode_parser.episodes;
-       print((episodes.index(0).episode_description));
+       //print((episodes.index(0).episode_description));
 
        program_model.clear();
 
