@@ -23,6 +23,18 @@ public class EpisodeParser : Deserializable {
                 episode.episode_duration = int.parse(iter->get_prop("duration"));
                 episode.episode_timestamp = int.parse(iter->get_prop("timestamp"));
 
+                int station_id = int.parse(iter->get_prop("station"));
+
+                switch(station_id){
+                    case 4: episode.station_display_name = "DLR";
+                        break;
+                    case 1: episode.station_display_name = "Nova";
+                        break;
+                    case 2: episode.station_display_name = "Kultur";
+                        break;
+                    default: assert_not_reached();
+                }
+
                 for (Xml.Node* child = iter->children; child != null; child = child->next){
                     if (!base.is_element_node(iter)) {
                         // Spaces between tags are handled as nodes too, skip them
