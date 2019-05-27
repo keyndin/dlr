@@ -63,7 +63,8 @@ public abstract class A_Station: I_Playable, GLib.Object{
 
         for(int i = 0; i < episodes.length; i++){
             var episode = episodes.index(i);
-            episode.broadcast_title = broadcast.broadcast_title;
+            episode.station_display_name = name.to_display_string();
+
             broadcast.episodes.append_val(episode);
         }
 
@@ -71,7 +72,23 @@ public abstract class A_Station: I_Playable, GLib.Object{
     }
 
     public void query_episodes(string search_term){
-        episode_parser.uri = search_url + search_term;
+        episode_parser.uri = search_url
+                             +search_term
+                             +"&drau:limit=1000";
+        episode_parser.parse();
+        episode_parser.cleanup();
+    }
+
+    public void daily_episodes(DateTime date){
+        string day = date.format("%x");
+        episode_parser.uri = episode_url
+                             +"drau:station_id="
+                             +station_id.to_string()
+                             +"&drau:from="
+                             +day
+                             +"&drau:to="
+                             +day
+                             +"&drau:limit=1000";
         episode_parser.parse();
         episode_parser.cleanup();
     }

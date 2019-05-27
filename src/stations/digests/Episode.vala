@@ -7,6 +7,7 @@ public class Episode:GLib.Object, I_Playable{
     public string episode_author;
     public int broadcast_id;
     public string broadcast_title;
+    public string station_display_name;
 
     public string get_stream_url(){
         return episode_url;
