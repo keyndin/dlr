@@ -435,7 +435,6 @@ public class MainWindow : Gtk.Application {
 
         favorites_model.clear();
 
-        //TODO set favorite dynamically on favorite row activated
         Gtk.TreeIter iter;
         for(int i = 0; i < broadcasts.length; i++){
             favorites_model.append(out iter);
@@ -481,7 +480,6 @@ public class MainWindow : Gtk.Application {
         favorites_tree_view.get_parent().hide();
         program_tree_view.get_parent().show();
 
-        // TODO: Call search function with entered string
         episode_query.query_episodes(sender.get_text());
         fill_program_tree_view(episode_query);
         is_search_active = true;
@@ -617,6 +615,11 @@ public class MainWindow : Gtk.Application {
         episodes_tree_view.get_parent().hide();
         favorites_tree_view.get_parent().hide();
 
+        // calls on_dlrbutton_clicked programatically so that the
+        // start view is not so empty ^^
+        // TODO check if this is useful or not
+        on_dlrbutton_clicked(new Gtk.Button());
+        player.pause();
         Gtk.main();
     }
 
