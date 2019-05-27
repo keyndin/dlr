@@ -1,7 +1,8 @@
 public enum E_StationNames{
     dlf = 4,
     nova = 1,
-    kultur = 3;
+    kultur = 3,
+    query = 42;
 
     public string to_string(){
         switch(this){

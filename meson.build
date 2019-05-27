@@ -9,6 +9,7 @@ dlr_sources = [
     'src/stations/DLF.vala',
     'src/stations/Nova.vala',
     'src/stations/Kultur.vala',
+    'src/stations/EpisodeQuery.vala',
     'src/stations/playable/A_Station.vala',
     'src/stations/E_StationNames.vala',
     'src/stations/playable/I_Playable.vala',
