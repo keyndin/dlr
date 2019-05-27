@@ -166,7 +166,31 @@ public class MainWindow : Gtk.Application {
         int[] indices = path.get_indices();
 
         //clicked column (for check on favorite toggle)
-        //print(column.title);
+        if(column.title == "Favorit"){
+            //gets associated station
+            Gtk.TreeIter iter;
+            view.get_model().get_iter(out iter, path);
+            GLib.Value station_column;
+            view.get_model().get_value(iter, broadcast_columns.STATION, out station_column);
+
+            switch((string)station_column){
+                case "dlf":
+                    Broadcast broadcast = dlf.broadcast_parser.broadcasts.index(indices[0]);
+                    schema.add_to_favorites(broadcast);
+                    break;
+                case "nova":
+                    Broadcast broadcast = nova.broadcast_parser.broadcasts.index(indices[0]);
+                    schema.add_to_favorites(broadcast);
+                    break;
+                case "kultur":
+                    Broadcast broadcast = kultur.broadcast_parser.broadcasts.index(indices[0]);
+                    schema.add_to_favorites(broadcast);
+                    break;
+                default:
+                    break;
+            }
+            return;
+        }
 
         //hides other tree_views and displays the episodes_tree_view
         broadcasts_tree_view.get_parent().hide();
@@ -201,71 +225,37 @@ public class MainWindow : Gtk.Application {
 
     [CCode (instance_pos = -1)]
     public void on_favorites_tree_view_row_activated(Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column){
-        // TODO Trigger EpisodeParser and switch to Episode TreeView
+        //index as int
+        int[] indices = path.get_indices();
+
         broadcasts_tree_view.get_parent().hide();
         favorites_tree_view.get_parent().hide();
-        episodes_tree_view.get_parent().hide();
-        program_tree_view.get_parent().show();
+        program_tree_view.get_parent().hide();
 
-        if(program_tree_view.get_columns().length() == 0){
+        episodes_tree_view.get_parent().show();
 
-            //mock data for treeview
-            var listmodel = new Gtk.ListStore(5
-            , typeof(string)
-            , typeof(string)
-            , typeof(string)
-            , typeof(string)
-            , typeof(string));
-
-            program_tree_view.set_model(listmodel);
-
-            program_tree_view.insert_column_with_attributes(-1
-            ,"Datum/Uhrzeit"
-            , new Gtk.CellRendererText()
-            , "text"
-            , episode_columns.TIMESTAMP);
-
-            program_tree_view.insert_column_with_attributes(-1
-            , "Sendung"
-            , new Gtk.CellRendererText()
-            , "text"
-            , episode_columns.BROADCAST);
-
-            program_tree_view.insert_column_with_attributes(-1
-            , "Episode"
-            , new Gtk.CellRendererText()
-            , "text"
-            , episode_columns.EPISODE);
-
-            program_tree_view.insert_column_with_attributes(-1
-            , "Autor"
-            , new Gtk.CellRendererText()
-            , "text"
-            , episode_columns.AUTHOR);
-
-            program_tree_view.insert_column_with_attributes(-1
-            , "Länge"
-            , new Gtk.CellRendererText()
-            , "text"
-            , episode_columns.DURATION);
+        Gtk.TreeIter iter;
+        view.get_model().get_iter(out iter, path);
+        GLib.Value station_column;
+        view.get_model().get_value(iter, broadcast_columns.STATION, out station_column);
 
 
-            Episodes_test[] episodes_test_data = {
-                new Episodes_test("25.05.2019 18:42", "Am Sonntag Morgen", "Abends um 18 Uhr", "Heinz", "4:34 min"),
-                new Episodes_test("25.05.2019 19:42", "Dein Sonntag", "Sonntags abend 19:42", "Eick", "3:12 min")
-            };
-
-            Gtk.TreeIter iter;
-            for(int i = 0; i < episodes_test_data.length; i++){
-                listmodel.append (out iter);
-                listmodel.set(iter
-                , episode_columns.TIMESTAMP, episodes_test_data[i].timestamp
-                , episode_columns.BROADCAST, episodes_test_data[i].broadcast_name
-                , episode_columns.EPISODE, episodes_test_data[i].episode_name
-                , episode_columns.AUTHOR, episodes_test_data[i].author
-                , episode_columns.DURATION, episodes_test_data[i].duration);
-            }
+        Broadcast broadcast = schema.get_favorites().index(indices[0]);
+        // TODO get station name
+        switch((string)station_column){
+            case "dlf":
+                fill_episodes_tree_view(dlf, broadcast);
+                break;
+            case "nova":
+                fill_episodes_tree_view(nova, broadcast);
+                break;
+            case "kultur":
+                fill_episodes_tree_view(kultur, broadcast);
+                break;
+            default:
+                break;
         }
+
     }
 
     [CCode (instance_pos = -1)]
@@ -311,7 +301,7 @@ public class MainWindow : Gtk.Application {
         Array<Broadcast> broadcasts = station.broadcast_parser.broadcasts;
 
         broadcasts_model.clear();
-
+        //TODO get favorie state;
         Gtk.TreeIter iter;
         for(int i = 0; i < broadcasts.length; i++){
             broadcasts_model.append (out iter);
@@ -323,16 +313,16 @@ public class MainWindow : Gtk.Application {
     }
 
     private void fill_favorites_tree_view(){
-        // TODO replace this with favorite logic
-        Array<Broadcast> broadcasts = nova.broadcast_parser.broadcasts;
+        Array<Broadcast> broadcasts = schema.get_favorites();
 
         favorites_model.clear();
-
+        //TODO set station to broadcast station;
+        //TODO set favorite dynamically
         Gtk.TreeIter iter;
         for(int i = 0; i < broadcasts.length; i++){
             favorites_model.append(out iter);
             favorites_model.set(iter
-            , broadcast_columns.STATION, nova.name.to_string()
+            , broadcast_columns.STATION, "dlf"
             , broadcast_columns.BROADCAST, broadcasts.index(i).broadcast_title
             , broadcast_columns.FAVORITE, "Ja");
         }
@@ -346,14 +336,21 @@ public class MainWindow : Gtk.Application {
 
         Gtk.TreeIter iter;
         for(int i = 0; i < episodes.length; i++){
+
+            //Gets DateTime from unix_timestamp
+            int64 timestamp = episodes.index(i).episode_timestamp;
+            var time = new DateTime.from_unix_utc(timestamp);
+
+            string duration = convert_seconds_to_hh_mm_ss(episodes.index(i).episode_duration);
+
             episodes_model.append (out iter);
             episodes_model.set(iter
-            , episode_columns.TIMESTAMP, episodes.index(i).episode_timestamp.to_string()
+            , episode_columns.TIMESTAMP, time.format("%x  %X")
             , episode_columns.STATION, station.name.to_string()
             , episode_columns.BROADCAST, broadcast.broadcast_title
             , episode_columns.EPISODE, episodes.index(i).episode_description
             , episode_columns.AUTHOR, episodes.index(i).episode_author
-            , episode_columns.DURATION, episodes.index(i).episode_duration.to_string());
+            , episode_columns.DURATION, duration);
         }
     }
 
@@ -588,31 +585,32 @@ public class MainWindow : Gtk.Application {
 
     [CCode (instance_pos = -1)]
     public string format_scale_value(Gtk.Scale sender){
-        //there is probably a better way to do this :(
-        double seconds = sender.get_value();
-        int format_hours = ((int)seconds / 3600);
-        int format_minutes = ((int)seconds / 60) - (3600 * format_hours);
-        int format_seconds = ((int)seconds) - (3600 * format_hours) - (60 * format_minutes);
+       return (convert_seconds_to_hh_mm_ss((int)sender.get_value()));
 
-        return format_hours.to_string() + ":" + format_minutes.to_string() +  ":" + format_seconds.to_string();
+    }
+
+    private string convert_seconds_to_hh_mm_ss(int seconds){
+        //there is probably a way better way to do this D:
+        int format_hours = (seconds / 3600);
+        int format_minutes = (seconds / 60) - (3600 * format_hours);
+        int format_seconds = (seconds) - (3600 * format_hours) - (60 * format_minutes);
+
+        string min;
+        if(format_minutes.to_string().length == 1){
+            min = "0" + format_minutes.to_string();
+        }
+        else{
+            min = format_minutes.to_string();
+        }
+
+        string sec;
+        if(format_seconds.to_string().length == 1){
+            sec = "0" + format_seconds.to_string();
+        }
+        else{
+            sec = format_seconds.to_string();
+        }
+
+        return format_hours.to_string() + ":" + min +  ":" + sec;
     }
 }
-
-
-//mock class for treeview
-public class Episodes_test{
-    public string timestamp;
-    public string broadcast_name;
-    public string episode_name;
-    public string author;
-    public string duration;
-
-    public Episodes_test(string timestamp, string broadcast, string episode, string author, string duration){
-        this.timestamp = timestamp;
-        this.broadcast_name = broadcast;
-        this.episode_name = episode;
-        this.author = author;
-        this.duration = duration;
-    }
-}
-
