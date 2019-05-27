@@ -15,7 +15,6 @@ public class EpisodeParser : Deserializable {
                 // Spaces between tags are handled as nodes too, skip them
                 continue;
             }
-
             if (iter->name == key) {
                 var episode = new Episode();
                 episode.episode_id = int.parse(iter->get_prop("id"));
@@ -24,13 +23,12 @@ public class EpisodeParser : Deserializable {
                 episode.episode_timestamp = int.parse(iter->get_prop("timestamp"));
 
                 int station_id = int.parse(iter->get_prop("station"));
-
                 switch(station_id){
                     case 4: episode.station_display_name = "DLR";
                         break;
                     case 1: episode.station_display_name = "Nova";
                         break;
-                    case 2: episode.station_display_name = "Kultur";
+                    case 3: episode.station_display_name = "Kultur";
                         break;
                     default: assert_not_reached();
                 }
