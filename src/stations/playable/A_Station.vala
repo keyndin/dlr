@@ -76,6 +76,7 @@ public abstract class A_Station: I_Playable, GLib.Object{
                              +search_term
                              +"&drau:limit=1000";
         episode_parser.parse();
+        set_episode_station_display_name();
         episode_parser.cleanup();
     }
 
@@ -90,7 +91,17 @@ public abstract class A_Station: I_Playable, GLib.Object{
                              +day
                              +"&drau:limit=1000";
         episode_parser.parse();
+        set_episode_station_display_name();
         episode_parser.cleanup();
+    }
+
+    public void set_episode_station_display_name(){
+        var episodes = episode_parser.episodes;
+
+        for(int i = 0; i < episodes.length; i++){
+            var episode = episodes.index(i);
+            episode.station_display_name = name.to_display_string();
+        }
     }
 }
 
