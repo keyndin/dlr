@@ -763,8 +763,6 @@ public class MainWindow : Gtk.Application {
          //   column.max_width = 100;
         //}
 
-
-
         //program_tree_view
         program_tree_view.set_model(program_model);
         program_tree_view.insert_column_with_attributes(-1
