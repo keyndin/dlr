@@ -100,6 +100,8 @@ public class MainWindow : Gtk.Application {
         var time = new DateTime.now();
         dlf.daily_episodes(time);
         fill_program_tree_view(dlf);
+        //sets value of the progress_slider to -1 to display "Live Radio"
+        progress_slider.set_range(-1, -1);
     }
 
     [CCode (instance_pos = -1)]
@@ -120,6 +122,8 @@ public class MainWindow : Gtk.Application {
         var time = new DateTime.now();
         nova.daily_episodes(time);
         fill_program_tree_view(nova);
+        //sets value of the progress_slider to -1 to display "Live Radio"
+        progress_slider.set_range(-1, -1);
     }
 
     [CCode (instance_pos = -1)]
@@ -140,6 +144,8 @@ public class MainWindow : Gtk.Application {
         var time = new DateTime.now();
         kultur.daily_episodes(time);
         fill_program_tree_view(kultur);
+        //sets value of the progress_slider to -1 to display "Live Radio"
+        progress_slider.set_range(-1, -1);
     }
 
 
@@ -791,6 +797,9 @@ public class MainWindow : Gtk.Application {
 
     [CCode (instance_pos = -1)]
     public string format_scale_value(Gtk.Scale sender){
+       if(sender.get_value() == -1){
+           return "Live Radio";
+       }
        return (convert_seconds_to_hh_mm_ss((int)sender.get_value()));
 
     }
@@ -816,7 +825,6 @@ public class MainWindow : Gtk.Application {
         else{
             sec = seconds.to_string();
         }
-
         return hours.to_string() + ":" + min +  ":" + sec;
     }
 }
