@@ -43,6 +43,7 @@ public class StreamPlayer:GLib.Object {
     public void stop() {
     	loop.quit();
     	state = State.NULL;
+    	player.set_state(state);
     }
 
     public void set_volume(double value)

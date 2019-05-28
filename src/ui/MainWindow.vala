@@ -535,9 +535,19 @@ public class MainWindow : Gtk.Application {
     {
         switch(player.state) {
             case Gst.State.PLAYING:
-                player.pause();
+                //check if live radio
+                if(progress_slider.get_value() == -1){
+                    player.stop();
+                }
+                else{
+                    player.pause();
+                }
                 break;
             case Gst.State.PAUSED:
+                player.resume();
+                break;
+            case Gst.State.NULL:
+                player.play(current_station);
                 player.resume();
                 break;
             default:
@@ -625,14 +635,13 @@ public class MainWindow : Gtk.Application {
         // start view is not so empty ^^
         // TODO check if this is useful or not
         on_dlrbutton_clicked(new Gtk.Button());
-        player.pause();
+        player.stop();
         Gtk.main();
     }
 
     private void update_play_button() {
         // Icon naming convention can be found here:
         // https://developer.gnome.org/icon-naming-spec/
-        // TODO: We need a state for stopped
         switch(player.state) {
             case Gst.State.PLAYING:
                 var icon = new Gtk.Image.from_icon_name(
