@@ -97,7 +97,7 @@ public class MainWindow : Gtk.Application {
         fill_broadcast_tree_view(dlf);
 
         //get_program for date.now()
-        var time = new DateTime.now();
+        var time = new DateTime.now(new TimeZone.local());
         dlf.daily_episodes(time);
         fill_program_tree_view(dlf);
         //sets value of the progress_slider to -1 to display "Live Radio"
@@ -119,7 +119,7 @@ public class MainWindow : Gtk.Application {
         fill_broadcast_tree_view(nova);
 
         //get_program for date.now()
-        var time = new DateTime.now();
+        var time = new DateTime.now(new TimeZone.local());
         nova.daily_episodes(time);
         fill_program_tree_view(nova);
         //sets value of the progress_slider to -1 to display "Live Radio"
@@ -141,7 +141,7 @@ public class MainWindow : Gtk.Application {
         fill_broadcast_tree_view(kultur);
 
         //get_program for date.now()
-        var time = new DateTime.now();
+        var time = new DateTime.now(new TimeZone.local());
         kultur.daily_episodes(time);
         fill_program_tree_view(kultur);
         //sets value of the progress_slider to -1 to display "Live Radio"
@@ -462,7 +462,7 @@ public class MainWindow : Gtk.Application {
 
             //Gets DateTime from unix_timestamp
             int64 timestamp = episodes.index(i).episode_timestamp;
-            var time = new DateTime.from_unix_utc(timestamp);
+            var time = new DateTime.from_unix_local(timestamp);
 
             string duration = convert_seconds_to_hh_mm_ss(episodes.index(i).episode_duration);
 
@@ -500,7 +500,7 @@ public class MainWindow : Gtk.Application {
 
             //Gets DateTime from unix_timestamp
             int64 timestamp = episodes.index(i).episode_timestamp;
-            var time = new DateTime.from_unix_utc(timestamp);
+            var time = new DateTime.from_unix_local(timestamp);
 
             string duration = convert_seconds_to_hh_mm_ss(episodes.index(i).episode_duration);
 
@@ -720,7 +720,7 @@ public class MainWindow : Gtk.Application {
         //episodes_tree_view
         episodes_tree_view.set_model(episodes_model);
         episodes_tree_view.insert_column_with_attributes(-1
-        ,"Datum/Uhrzeit (UTC)"
+        ,"Datum/Uhrzeit"
         , new Gtk.CellRendererText()
         , "text"
         , episode_columns.TIMESTAMP);
@@ -768,7 +768,7 @@ public class MainWindow : Gtk.Application {
         //program_tree_view
         program_tree_view.set_model(program_model);
         program_tree_view.insert_column_with_attributes(-1
-        ,"Datum/Uhrzeit (UTC)"
+        ,"Datum/Uhrzeit"
         , new Gtk.CellRendererText()
         , "text"
         , episode_columns.TIMESTAMP);
