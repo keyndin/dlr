@@ -50,6 +50,8 @@ public class MainWindow : Gtk.Application {
     private A_Station current_station;
     //ugly boolean to check if the search is currently active D:
     private bool is_search_active;
+    //sorry
+    private int current_episode_index = -99;
 
     private Gtk.Scale progress_slider;
     public SchemaIO schema { public get; private set; }
@@ -89,6 +91,7 @@ public class MainWindow : Gtk.Application {
         is_search_active = false;
         player.play(dlf);
         current_station = dlf;
+        current_episode_index = -99;
         broadcasts_tree_view.get_parent().hide();
         episodes_tree_view.get_parent().hide();
         favorites_tree_view.get_parent().hide();
@@ -111,6 +114,7 @@ public class MainWindow : Gtk.Application {
         is_search_active = false;
         player.play(nova);
         current_station = nova;
+        current_episode_index = -99;
         broadcasts_tree_view.get_parent().hide();
         episodes_tree_view.get_parent().hide();
         favorites_tree_view.get_parent().hide();
@@ -133,6 +137,7 @@ public class MainWindow : Gtk.Application {
         is_search_active = false;
         player.play(kultur);
         current_station = kultur;
+        current_episode_index = -99;
         broadcasts_tree_view.get_parent().hide();
         episodes_tree_view.get_parent().hide();
         favorites_tree_view.get_parent().hide();
@@ -340,7 +345,7 @@ public class MainWindow : Gtk.Application {
     public void on_episodes_tree_view_row_activated(Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column){
         //index as int
         int[] indices = path.get_indices();
-
+        current_episode_index = indices[0];
         //get associated station
         Gtk.TreeIter iter;
         view.get_model().get_iter(out iter, path);
@@ -377,7 +382,7 @@ public class MainWindow : Gtk.Application {
     {
         //index as int
         int[] indices = path.get_indices();
-
+        current_episode_index = indices[0];
         //get associated station
         Gtk.TreeIter iter;
         view.get_model().get_iter(out iter, path);
@@ -391,28 +396,10 @@ public class MainWindow : Gtk.Application {
             resume_progress_slider();
         }
         else{
-            switch((string)station_column){
-                case "DLR":
-                    Episode episode = dlf.episode_parser.episodes.index(indices[0]);
-                    player.play(episode);
-                    progress_slider.set_range(0, episode.episode_duration);
-                    resume_progress_slider();
-                    break;
-                case "Nova":
-                    Episode episode = nova.episode_parser.episodes.index(indices[0]);
-                    player.play(episode);
-                    progress_slider.set_range(0, episode.episode_duration);
-                    resume_progress_slider();
-                    break;
-                case "Kultur":
-                    Episode episode = kultur.episode_parser.episodes.index(indices[0]);
-                    player.play(episode);
-                    progress_slider.set_range(0, episode.episode_duration);
-                    resume_progress_slider();
-                    break;
-                default:
-                    break;
-            }
+            Episode episode = current_station.episode_parser.episodes.index(indices[0]);
+            player.play(episode);
+            progress_slider.set_range(0, episode.episode_duration);
+            resume_progress_slider();
         }
     }
 
@@ -456,7 +443,7 @@ public class MainWindow : Gtk.Application {
         Array<Episode> episodes = station.episode_parser.episodes;
 
         episodes_model.clear();
-
+        current_episode_index = -99;
         Gtk.TreeIter iter;
         for(int i = 0; i < episodes.length; i++){
 
@@ -488,6 +475,7 @@ public class MainWindow : Gtk.Application {
 
         episode_query.query_episodes(sender.get_text());
         fill_program_tree_view(episode_query);
+        current_episode_index = -99;
         is_search_active = true;
     }
 
@@ -802,16 +790,174 @@ public class MainWindow : Gtk.Application {
         , episode_columns.DURATION);
     }
 
+
+    [CCode (instance_pos = -1)]
+    public void on_next_clicked(Gtk.Button sender)
+    {
+        if(current_episode_index >= 0){
+            int nextIndex = current_episode_index + 1;
+
+            if(program_tree_view.get_parent().get_visible() == true){
+                if(is_search_active == true){
+                    if(episode_query.episode_parser.episodes.length <= nextIndex){
+                        return;
+                    }
+                    Episode episode = episode_query.episode_parser.episodes.index(nextIndex);
+                    player.play(episode);
+                    progress_slider.set_range(0, episode.episode_duration);
+                    resume_progress_slider();
+                }
+                else{
+                    if(current_station.episode_parser.episodes.length <= nextIndex){
+                        return;
+                    }
+                    Episode episode = current_station.episode_parser.episodes.index(nextIndex);
+                    player.play(episode);
+                    progress_slider.set_range(0, episode.episode_duration);
+                    resume_progress_slider();
+                }
+                current_episode_index = nextIndex;
+            }
+            else if(episodes_tree_view.get_parent().get_visible() == true){
+
+                Gtk.TreeIter iter;
+                //all episodes in a broadcast have the same station
+                episodes_tree_view.get_model().get_iter_from_string(out iter, "0");
+                GLib.Value station_column;
+                episodes_tree_view.get_model().get_value(iter, episode_columns.STATION, out station_column);
+                print(current_episode_index.to_string());
+                            print(nextIndex.to_string());
+                            print((string)station_column);
+                switch((string)station_column){
+                    case "DLR":
+                    print(dlf.episode_parser.episodes.length.to_string());
+                        if(dlf.episode_parser.episodes.length > nextIndex){
+
+                            Episode episode = dlf.episode_parser.episodes.index(nextIndex);
+                            player.play(episode);
+                            progress_slider.set_range(0, episode.episode_duration);
+                            resume_progress_slider();
+                            current_episode_index++;
+                        }
+                        break;
+                    case "Nova":
+                        if(nova.episode_parser.episodes.length > nextIndex){
+                            Episode episode = nova.episode_parser.episodes.index(nextIndex);
+                            player.play(episode);
+                            progress_slider.set_range(0, episode.episode_duration);
+                            resume_progress_slider();
+                            current_episode_index++;
+                        }
+                        break;
+                    case "Kultur":
+                        if(kultur.episode_parser.episodes.length > nextIndex){
+                            Episode episode = kultur.episode_parser.episodes.index(nextIndex);
+                            player.play(episode);
+                            progress_slider.set_range(0, episode.episode_duration);
+                            resume_progress_slider();
+                            current_episode_index++;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else{
+                return;
+            }
+        }
+        else{
+            return;
+        }
+    }
+
+    [CCode (instance_pos = -1)]
+    public void on_previous_clicked(Gtk.Button sender)
+    {
+        if(current_episode_index >= 0){
+            int prevIndex = current_episode_index - 1;
+
+            if(program_tree_view.get_parent().get_visible() == true){
+                if(is_search_active == true){
+                    if(0 > prevIndex){
+                        return;
+                    }
+                    Episode episode = episode_query.episode_parser.episodes.index(prevIndex);
+                    player.play(episode);
+                    progress_slider.set_range(0, episode.episode_duration);
+                    resume_progress_slider();
+                }
+                else{
+                    if(0 > prevIndex){
+                        return;
+                    }
+                    Episode episode = current_station.episode_parser.episodes.index(prevIndex);
+                    player.play(episode);
+                    progress_slider.set_range(0, episode.episode_duration);
+                    resume_progress_slider();
+                }
+                current_episode_index = prevIndex;
+            }
+
+            else if(episodes_tree_view.get_parent().get_visible() == true){
+                Gtk.TreeIter iter;
+                //all episodes in a broadcast have the same station
+                episodes_tree_view.get_model().get_iter_from_string(out iter, "0");
+                GLib.Value station_column;
+                episodes_tree_view.get_model().get_value(iter, episode_columns.STATION, out station_column);
+                switch((string)station_column){
+                    case "DLR":
+                        if(current_episode_index > 0){
+                            Episode episode = dlf.episode_parser.episodes.index(current_episode_index - 1);
+                            player.play(episode);
+                            progress_slider.set_range(0, episode.episode_duration);
+                            resume_progress_slider();
+                            current_episode_index--;
+                        }
+                        break;
+                    case "Nova":
+                        if(current_episode_index > 0){
+                            Episode episode = nova.episode_parser.episodes.index(current_episode_index - 1);
+                            player.play(episode);
+                            progress_slider.set_range(0, episode.episode_duration);
+                            resume_progress_slider();
+                            current_episode_index--;
+                        }
+                        break;
+                    case "Kultur":
+                        if(current_episode_index > 0){
+                            Episode episode = kultur.episode_parser.episodes.index(current_episode_index - 1);
+                            player.play(episode);
+                            progress_slider.set_range(0, episode.episode_duration);
+                            resume_progress_slider();
+                            current_episode_index--;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else{
+                return;
+            }
+        }
+        else{
+            return;
+        }
+    }
+
+
+
+
     [CCode (instance_pos = -1)]
     public string format_scale_value(Gtk.Scale sender){
        if(sender.get_value() == -1){
            return "Live Radio";
        }
        return (convert_seconds_to_hh_mm_ss((int)sender.get_value()));
-
     }
 
-    private string convert_seconds_to_hh_mm_ss(int seconds){
+    public static string convert_seconds_to_hh_mm_ss(int seconds){
         int hours = seconds / 3600;
         seconds %= 3600;
         int minutes = seconds / 60;
@@ -834,4 +980,5 @@ public class MainWindow : Gtk.Application {
         }
         return hours.to_string() + ":" + min +  ":" + sec;
     }
+
 }
