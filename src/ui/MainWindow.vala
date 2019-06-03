@@ -743,14 +743,6 @@ public class MainWindow : Gtk.Application {
         , "text"
         , episode_columns.DURATION);
 
-
-        //TODO Set max_width for columns
-        //List<Gtk.TreeViewColumn> episode_column_list = episodes_tree_view.get_columns();
-        //foreach(Gtk.TreeViewColumn column in episode_column_list){
-         //   print("column | ");
-         //   column.max_width = 100;
-        //}
-
         //program_tree_view
         program_tree_view.set_model(program_model);
         program_tree_view.insert_column_with_attributes(-1
@@ -798,6 +790,10 @@ public class MainWindow : Gtk.Application {
             int nextIndex = current_episode_index + 1;
 
             if(program_tree_view.get_parent().get_visible() == true){
+
+                Gtk.TreeIter iter;
+                program_tree_view.get_selection().get_selected(null,out iter);
+
                 if(is_search_active == true){
                     if(episode_query.episode_parser.episodes.length <= nextIndex){
                         return;
@@ -817,6 +813,8 @@ public class MainWindow : Gtk.Application {
                     resume_progress_slider();
                 }
                 current_episode_index = nextIndex;
+                program_tree_view.get_model().iter_next(ref iter);
+                program_tree_view.get_selection().select_iter(iter);
             }
             else if(episodes_tree_view.get_parent().get_visible() == true){
 
@@ -825,14 +823,12 @@ public class MainWindow : Gtk.Application {
                 episodes_tree_view.get_model().get_iter_from_string(out iter, "0");
                 GLib.Value station_column;
                 episodes_tree_view.get_model().get_value(iter, episode_columns.STATION, out station_column);
-                print(current_episode_index.to_string());
-                            print(nextIndex.to_string());
-                            print((string)station_column);
+
+
+
                 switch((string)station_column){
                     case "DLR":
-                    print(dlf.episode_parser.episodes.length.to_string());
                         if(dlf.episode_parser.episodes.length > nextIndex){
-
                             Episode episode = dlf.episode_parser.episodes.index(nextIndex);
                             player.play(episode);
                             progress_slider.set_range(0, episode.episode_duration);
@@ -861,6 +857,10 @@ public class MainWindow : Gtk.Application {
                     default:
                         break;
                 }
+
+                episodes_tree_view.get_selection().get_selected(null,out iter);
+                episodes_tree_view.get_model().iter_next(ref iter);
+                episodes_tree_view.get_selection().select_iter(iter);
             }
             else{
                 return;
@@ -878,6 +878,10 @@ public class MainWindow : Gtk.Application {
             int prevIndex = current_episode_index - 1;
 
             if(program_tree_view.get_parent().get_visible() == true){
+
+                Gtk.TreeIter iter;
+                program_tree_view.get_selection().get_selected(null,out iter);
+
                 if(is_search_active == true){
                     if(0 > prevIndex){
                         return;
@@ -897,6 +901,8 @@ public class MainWindow : Gtk.Application {
                     resume_progress_slider();
                 }
                 current_episode_index = prevIndex;
+                program_tree_view.get_model().iter_previous(ref iter);
+                program_tree_view.get_selection().select_iter(iter);
             }
 
             else if(episodes_tree_view.get_parent().get_visible() == true){
@@ -905,6 +911,7 @@ public class MainWindow : Gtk.Application {
                 episodes_tree_view.get_model().get_iter_from_string(out iter, "0");
                 GLib.Value station_column;
                 episodes_tree_view.get_model().get_value(iter, episode_columns.STATION, out station_column);
+
                 switch((string)station_column){
                     case "DLR":
                         if(current_episode_index > 0){
@@ -936,6 +943,11 @@ public class MainWindow : Gtk.Application {
                     default:
                         break;
                 }
+
+
+                episodes_tree_view.get_selection().get_selected(null,out iter);
+                episodes_tree_view.get_model().iter_previous(ref iter);
+                episodes_tree_view.get_selection().select_iter(iter);
             }
             else{
                 return;
