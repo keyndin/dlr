@@ -89,7 +89,7 @@ public abstract class A_Station: I_Playable, GLib.Object{
                              +day
                              +"&drau:to="
                              +day
-                             +"&drau:limit=1000";
+                             +"&drau:limit=50";
         episode_parser.parse();
         episode_parser.cleanup();
     }
