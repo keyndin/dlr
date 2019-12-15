@@ -1,11 +1,11 @@
 [Desktop Entry]
-Name=Deutschlandfunk Radio
+Name=Aircheck
 GenericName=Deutschlandfunk Client
 Comment=Listen to Deutschlandfunk live radio and its podcasts
-Categories=Audio;
+Categories=Audio;Video;AudioVideo;
 Exec=com.github.keyndin.dlr
 Icon=com.github.keyndin.dlr
 Terminal=false
 Type=Application
-Keywords=dlf;radio;deutschlandfunk;dlr
+Keywords=dlf;radio;deutschlandfunk;dlr;deutschlandradio
 X-GNOME-UsesNotifications=true
