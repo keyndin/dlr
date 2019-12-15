@@ -22,8 +22,8 @@ public abstract class A_Station: I_Playable, GLib.Object{
     }
 
     public string get_stream_url(){
-        return "https://dg-dradio-https-fra-dtag-cdn.sslcast.addradio.de/dradio/"
-        +name.to_string()+"/live/mp3/128/stream.mp3";
+        return "https://dradio-edge-1098-dus-dtag-cdn.sslcast.addradio.de/dradio/"+name.to_string()+
+        "/live/mp3/128/stream.mp3";
     }
 
     public void set_preview(){
