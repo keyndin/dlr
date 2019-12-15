@@ -47,23 +47,25 @@ test(
 
 # Create a new executable, list the files we want to compile, list the dependencies we need, and install
 executable(
-   # meson.project_name(),
-   'dlr',
+   meson.project_name(),
    ['src/main.vala'],
    dlr_sources,
    dependencies: dlr_dependencies,
    install: true,
-   export_dynamic: true
+   export_dynamic: true,
+   gui_app: true,
 )
 
-#Install our .desktop file so the Applications Menu will see it
+#Install our .desktop file in order for the Applications Menu to see it
 install_data(
    join_paths('data', meson.project_name() + '.desktop'),
    install_dir: join_paths(get_option('datadir'), 'applications')
 )
 
-#Install our .appdata.xml file so AppCenter will see it
+#Install our .appdata.xml file for AppCenter to see it
 install_data(
    join_paths('data', meson.project_name() + '.appdata.xml'),
    install_dir: join_paths(get_option('datadir'), 'metainfo')
 )
+
+subdir('data')
