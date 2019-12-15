@@ -1,10 +1,11 @@
 [Desktop Entry]
-Name=dlf
-GenericName=Deutschland Funk Radio
-Comment=Deutschland Funk Radio Client
-Categories=Utility;Education;
-Exec=com.github.keyndin.dlf
-Icon=application-default-icon
+Name=Deutschlandfunk Radio
+GenericName=Deutschlandfunk Client
+Comment=Listen to Deutschlandfunk live radio and its podcasts
+Categories=Audio;
+Exec=com.github.keyndin.dlr
+Icon=com.github.keyndin.dlr
 Terminal=false
 Type=Application
-Keywords=DLF;Radio;
+Keywords=dlf;radio;deutschlandfunk;dlr
+X-GNOME-UsesNotifications=true
