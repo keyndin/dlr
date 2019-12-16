@@ -39,7 +39,10 @@ public class StreamPlayer:GLib.Object {
     }
 
     public void pause () {
-    	player.set_state(State.PAUSED);
+        if (playable.is_live_stream())
+            player.set_state(State.READY);
+        else
+    	    player.set_state(State.PAUSED);
     }
 
     public void toggle () {

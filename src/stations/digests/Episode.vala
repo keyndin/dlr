@@ -24,4 +24,8 @@ public class Episode:GLib.Object, I_Playable{
         return broadcast_title;
     }
 
+    public bool is_live_stream(){
+        return false;
+    }
+
 }

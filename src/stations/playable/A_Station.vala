@@ -93,5 +93,9 @@ public abstract class A_Station: I_Playable, GLib.Object{
         episode_parser.parse();
         episode_parser.cleanup();
     }
+
+    public bool is_live_stream(){
+        return true;
+    }
 }
 
