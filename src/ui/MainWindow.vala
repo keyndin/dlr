@@ -1,7 +1,7 @@
 public class MainWindow : Gtk.Application {
 
     public string title {get; private set;}
-    private StreamPlayer player = new StreamPlayer();
+    private StreamPlayer player = StreamPlayer.getInstance();
 
     // Window elements
     private Gtk.Label now_playing_label;

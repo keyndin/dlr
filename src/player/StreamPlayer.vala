@@ -5,11 +5,17 @@ public class StreamPlayer:GLib.Object {
     public State state { get; private set;}
     public I_Playable playable {public get; private set;}
     private MainLoop loop = new MainLoop ();
-    private dynamic Element player;
+    private dynamic Element player = ElementFactory.make ("playbin", "play");
+    private static StreamPlayer instance;
 
-    public StreamPlayer() {
-    	player = ElementFactory.make ("playbin", "play");
-    	player.set_state(State.READY);
+    private StreamPlayer() {
+        player.set_state(State.READY);
+    }
+
+    public static StreamPlayer getInstance() {
+        if (instance == null)
+            instance = new StreamPlayer();
+        return instance;
     }
 
     public void play (I_Playable now_playing) {
@@ -34,6 +40,11 @@ public class StreamPlayer:GLib.Object {
 
     public void pause () {
     	player.set_state(State.PAUSED);
+    }
+
+    public void toggle () {
+        if (state == State.PLAYING) pause();
+        else if (state == State.PAUSED) resume();
     }
 
     public void resume () {
@@ -89,7 +100,6 @@ public class StreamPlayer:GLib.Object {
         case MessageType.EOS:
             // End of stream
             state = State.PAUSED;
-            stdout.printf ("end of stream\n");
             break;
         case MessageType.STATE_CHANGED:
             // State has changed

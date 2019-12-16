@@ -20,6 +20,7 @@ dlr_sources = [
    'src/stations/digests/EpisodeParser.vala',
    'src/utils/Deserializable.vala',
    'src/utils/SchemaIO.vala',
+   'src/player/MediaKeys.vala',
 ]
 
 dlr_dependencies = [
