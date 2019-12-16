@@ -1,0 +1,11 @@
+<schemalist>
+  <schema id="com.github.keyndin.dlr"
+          path="/com/github/keyndin/dlr/"
+          gettext-domain="dlr">
+    <key name="favorite-broadcasts" type="as">
+      <default>[]</default>
+      <summary>Favorite broadcasts</summary>
+      <description>A list of favorite broadcasts</description>
+    </key>
+  </schema>
+</schemalist>

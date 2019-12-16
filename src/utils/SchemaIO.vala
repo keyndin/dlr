@@ -1,20 +1,10 @@
 public class SchemaIO:GLib.Object {
-    private SettingsSchemaSource source {private get; private set; }
-    private SettingsSchema schema {private get; private set; }
     private Settings settings {private get; private set; }
     public Array<Broadcast> broadcasts { public get; public set; }
 
     public SchemaIO(){
         broadcasts = new Array<Broadcast>();
-        try{
-            string settings_dir = Environment.get_current_dir().replace("build", "data");
-            source = new SettingsSchemaSource.from_directory(settings_dir, null, false);
-            schema = source.lookup("aircheck", false);
-            settings = new Settings.full(schema, null, null);
-        }
-        catch(Error e){
-            print("Error: %s\n", e.message);
-        }
+        settings = new GLib.Settings ("com.github.keyndin.dlr");
         //settings.reset("favorite-broadcasts");
     }
 
@@ -38,7 +28,6 @@ public class SchemaIO:GLib.Object {
                     favorites.append_val(broadcast);
             }
         }
-
         return favorites;
     }
 
@@ -54,7 +43,6 @@ public class SchemaIO:GLib.Object {
                 }
             }
         }
-
         settings.set_value("favorite-broadcasts", ids);
     }
 
@@ -73,5 +61,4 @@ public class SchemaIO:GLib.Object {
             broadcasts.append_val(broadcast);
         }
     }
-
 } 

@@ -1,9 +1,0 @@
-<schemalist>
-  <schema id="aircheck"
-          path="/aircheck/data/"
-          gettext-domain="dlr">
-    <key name="favorite-broadcasts" type="as">
-      <default>[]</default>
-    </key>
-  </schema>
-</schemalist>
