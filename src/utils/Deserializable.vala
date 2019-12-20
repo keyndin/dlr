@@ -46,13 +46,13 @@ public abstract class Deserializable {
             }
         }
 
-        return "NOT YET IMPLEMENTED";
+        assert_not_reached(); // TODO: implement!
     }
 
     public abstract void find_all_by_key (string key);
 
     protected string read_from_uri(string uri) {
-        // Get content from URI and return it as string
+        // Get content from URI and return it as string.
         // Since some systemcalls are handeled differently 
         // on Linux / Mac / Windows, e.g. how files are
         // opened, we have to accomendate for these 
@@ -71,7 +71,7 @@ public abstract class Deserializable {
             }
             return res;
         } catch (GLib.Error e) {
-            stdout.printf("Error while opening stream: %s", e.message);
+            critical("Error while opening stream: %s".printf( e.message));
             return res;
         }
 #else

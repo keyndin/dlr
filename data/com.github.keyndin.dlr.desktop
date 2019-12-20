@@ -9,3 +9,19 @@ Terminal=false
 Type=Application
 Keywords=dlf;radio;deutschlandfunk;dlr;deutschlandradio
 X-GNOME-UsesNotifications=true
+Actions=DLR;Nova;Kultur
+
+[Desktop Action DLR]
+Name=Deutschlandfunk
+Exec=com.github.keyndin.dlr --dlr
+Icon=media-playback-start-symbolic
+
+[Desktop Action Nova]
+Name=Deutschlandfunk Nova
+Exec=com.github.keyndin.dlr --nova
+Icon=media-playback-start-symbolic
+
+[Desktop Action Kultur]
+Name=Deutschlandfunk Kultur
+Exec=com.github.keyndin.dlr --kultur
+Icon=media-playback-start-symbolic

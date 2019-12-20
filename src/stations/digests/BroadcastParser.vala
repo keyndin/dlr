@@ -1,7 +1,11 @@
 public class BroadcastParser : Deserializable {
     public Array<Broadcast> broadcasts { get; set; }
     public string uri { get; set; default = ""; }
-    public string station_display_name;
+    public E_StationNames station;
+
+    public BroadcastParser(E_StationNames station) {
+        this.station = station;
+    }
 
     public override void parse() {
 
@@ -13,19 +17,17 @@ public class BroadcastParser : Deserializable {
     }
 
     public override void find_all_by_key(string key){
-
         for (Xml.Node* iter = base.root->children; iter != null; iter = iter->next){
             if (!base.is_element_node(iter)) {
                 // Spaces between tags are handled as nodes too, skip them
                 continue;
             }
-
             if (iter->name == key) {
                 var broadcast_id = int.parse(iter->get_prop("id"));
                 var broadcast = new Broadcast();
-                broadcast.broadcast_title = iter->get_content().normalize();
-                broadcast.broadcast_id = broadcast_id;
-                broadcast.station_display_name = station_display_name;
+                broadcast.title = iter->get_content().normalize();
+                broadcast.id = broadcast_id;
+                broadcast.station = station.to_display_string();
                 broadcasts.append_val(broadcast);
             }
 

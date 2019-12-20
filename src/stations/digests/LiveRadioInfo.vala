@@ -6,6 +6,11 @@ public class LiveRadioInfo : Deserializable {
     public string href_text {get;private set;}
     public string uri {get;set; default = "";}
 
+    public LiveRadioInfo(string uri) {
+        this.uri = uri;
+        parse();
+    }
+
     public override void parse() {
         // Get XML from URL and parse result
         base.get_from_uri(uri);

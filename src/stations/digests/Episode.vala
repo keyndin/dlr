@@ -1,31 +1,31 @@
 public class Episode:GLib.Object, I_Playable{
-    public int episode_id;
-    public string episode_url;
-    public int episode_duration;
-    public int episode_timestamp;
-    public string episode_description;
-    public string episode_author;
+    public int id;
+    public int duration;
+    public int timestamp;
+    public string description;
+    public string author;
     public int broadcast_id;
-    public string broadcast_title;
-    public string station_display_name;
+    private string _name;
+    private string _station_name;
+    private string _stream_url;
 
-    public string get_stream_url(){
-        return episode_url;
+    public  string name {public owned get{
+        return _name;
+    }}
+	public  string station_name {public owned get{
+        return _station_name;
+    }}
+	public  string stream_url {public owned get{
+        return _stream_url;
+    }}
+    public  bool is_broadcast {public get { return false; }}
+
+    public Episode (string name, string station_name, string stream_url) {
+        this._name = name;
+        this._station_name = station_name;
+        this._stream_url = stream_url;
     }
 
     public void set_preview(){
     }
-
-    public string get_program_name(){
-        return episode_description;
-    }
-
-    public string get_parent_name(){
-        return broadcast_title;
-    }
-
-    public bool is_live_stream(){
-        return false;
-    }
-
 }

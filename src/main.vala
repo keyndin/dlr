@@ -7,8 +7,6 @@ public static int main (string[] args) {
 		Gst.init(ref args);
 
 		// Instanciate and run our application
-		var app = new MainWindow();
-		// Listen to mediakey
-		MediaKeyListener.listen();
+		var app = Application.instance;
         return app.run(args);
 }

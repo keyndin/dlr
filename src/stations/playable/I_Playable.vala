@@ -1,9 +1,8 @@
 public interface I_Playable:GLib.Object{
-
-	public abstract string get_stream_url();
+	public abstract string name {public owned get;}
+	public abstract string station_name {public owned get;}
+	public abstract string stream_url {public owned get;}
 	public abstract void set_preview();
-	public abstract string get_program_name();
-	public abstract string get_parent_name();
-	public abstract bool is_live_stream();
+	public abstract bool is_broadcast {public get;}
 }
 

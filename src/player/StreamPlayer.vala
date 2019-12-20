@@ -3,19 +3,29 @@ using Gst;
 public class StreamPlayer:GLib.Object {
 
     public State state { get; private set;}
+    public signal void state_changed();
     public I_Playable playable {public get; private set;}
     private MainLoop loop = new MainLoop ();
     private dynamic Element player = ElementFactory.make ("playbin", "play");
-    private static StreamPlayer instance;
+    public static StreamPlayer instance {
+        get {
+            if (_instance == null)
+                _instance = new StreamPlayer();
+            return _instance;
+        }
+    }
+    private static StreamPlayer _instance;
+    public string? title {public owned get{
+        if (_title != null)
+            return _title;
+        if (playable.name != null)
+            return playable.name;
+        return null;
+    }}
+    private string _title;
 
     private StreamPlayer() {
         player.set_state(State.READY);
-    }
-
-    public static StreamPlayer getInstance() {
-        if (instance == null)
-            instance = new StreamPlayer();
-        return instance;
     }
 
     public void play (I_Playable now_playing) {
@@ -28,7 +38,7 @@ public class StreamPlayer:GLib.Object {
         // Set player to accept a new stream
         player.set_state(State.NULL);
         // Set the new stream uri
-		player.uri = playable.get_stream_url();
+		player.uri = playable.stream_url;
 
         // Connect our bus
         var bus = player.get_bus ();
@@ -39,7 +49,7 @@ public class StreamPlayer:GLib.Object {
     }
 
     public void pause () {
-        if (playable.is_live_stream())
+        if (playable.is_broadcast)
             player.set_state(State.READY);
         else
     	    player.set_state(State.PAUSED);
@@ -83,8 +93,7 @@ public class StreamPlayer:GLib.Object {
     private void foreach_tag (Gst.TagList list, string tag) {
         switch (tag) {
         case "title":
-            string tag_string;
-            list.get_string (tag, out tag_string);
+            list.get_string(tag, out _title);
             break;
         default:
             break;
@@ -93,37 +102,41 @@ public class StreamPlayer:GLib.Object {
 
     private bool bus_callback (Gst.Bus bus, Gst.Message message) {
         switch (message.type) {
-        case MessageType.ERROR:
-            // Something went wrong
-            GLib.Error err;
-            string debug;
-            message.parse_error (out err, out debug);
-            loop.quit();
-            break;
-        case MessageType.EOS:
-            // End of stream
-            state = State.PAUSED;
-            break;
-        case MessageType.STATE_CHANGED:
-            // State has changed
-            Gst.State oldstate;
-            Gst.State newstate;
-            Gst.State pending;
-            message.parse_state_changed (out oldstate, out newstate,
-                                         out pending);
-            if (newstate == State.PAUSED) {
-                        state = State.PAUSED;
-            } else if (newstate == State.PLAYING) {
-                        state = State.PLAYING;
-            }
-            break;
-        case MessageType.TAG:
-            Gst.TagList tag_list;
-            message.parse_tag (out tag_list);
-            tag_list.foreach ((TagForeachFunc) foreach_tag);
-            break;
-        default:
-            break;
+            case MessageType.ERROR:
+                // Something went wrong.. inform user
+                GLib.Error err;
+                string debug;
+                message.parse_error (out err, out debug);
+                loop.quit();
+                Application.instance.send_message("Error", err.message);
+                warning(debug);
+                break;
+            case MessageType.EOS:
+                // End of stream
+                state = State.PAUSED;
+                Application.instance.send_message("End of Stream", "Stream has ended");
+                break;
+            case MessageType.STATE_CHANGED:
+                // State has changed
+                Gst.State oldstate;
+                Gst.State newstate;
+                Gst.State pending;
+                message.parse_state_changed (out oldstate, out newstate,
+                                            out pending);
+                if (newstate == State.PAUSED) {
+                            state = State.PAUSED;
+                } else if (newstate == State.PLAYING) {
+                            state = State.PLAYING;
+                }
+                state_changed();
+                break;
+            case MessageType.TAG:
+                Gst.TagList tag_list;
+                message.parse_tag (out tag_list);
+                tag_list.foreach ((TagForeachFunc) foreach_tag);
+                break;
+            default:
+                break;
         }
         return true;
     }

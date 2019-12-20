@@ -32,6 +32,15 @@ public enum E_StationNames{
         }
     }
 
+    public static E_StationNames fromInt(int i) {
+        switch(i){
+            case 4: return dlf;
+            case 1: return nova;
+            case 3: return kultur;
+            default: assert_not_reached();
+        }
+    }
+
     public int get_id(){
         switch(this){
             case dlf:

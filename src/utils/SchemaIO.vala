@@ -9,7 +9,7 @@ public class SchemaIO:GLib.Object {
     }
 
     public void add_to_favorites(Broadcast broadcast){
-        string broadcast_id = broadcast.broadcast_id.to_string();
+        string broadcast_id = broadcast.id.to_string();
         string[] ids = settings.get_strv("favorite-broadcasts");
         bool already_faved = check_for_duplicates(broadcast_id);
         if(already_faved) return;
@@ -23,7 +23,7 @@ public class SchemaIO:GLib.Object {
         foreach(string id in ids){
             for(int i = 0; i < broadcasts.length; i++){
                 Broadcast broadcast = broadcasts.index(i);
-                string broadcast_id = broadcast.broadcast_id.to_string();
+                string broadcast_id = broadcast.id.to_string();
                 if(id == broadcast_id)
                     favorites.append_val(broadcast);
             }
@@ -32,7 +32,7 @@ public class SchemaIO:GLib.Object {
     }
 
     public void remove_from_favorites(Broadcast broadcast){
-        string broadcast_id = broadcast.broadcast_id.to_string();
+        string broadcast_id = broadcast.id.to_string();
         string[] ids = settings.get_strv("favorite-broadcasts");
         for(int i = 0; i < ids.length; i++){
             var id = ids[i];
