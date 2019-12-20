@@ -117,7 +117,7 @@ public class MainWindow : Gtk.Window {
 
         // Set title
         window.title = "Project Aircheck";
-        window.application = Application.instance;
+        //  window.application = Application.instance;
 
         // Connect listeners
         player.state_changed.connect(() => {
@@ -139,7 +139,7 @@ public class MainWindow : Gtk.Window {
         window.present();
     }    
 
-    public async void play_station(A_Station current_station){
+    public async void play_station(A_Station current_station) throws ThreadError{
         // Plays current stations and parses required data to fill programm view
         callback = play_station.callback;
         this.current_station = current_station;
@@ -160,7 +160,7 @@ public class MainWindow : Gtk.Window {
             program_tree_view.get_parent().show();
          return true;
         };
-        new Thread<bool>("change-station-thread", run);
+        Thread<bool> thread = new Thread<bool>("x",run);
         yield;
     }
 
