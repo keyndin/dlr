@@ -1,22 +1,26 @@
 public class Application : Gtk.Application {
-    public static MainWindow window {public get {
-        if (_window == null){
-            _window = MainWindow.instance;
-            // Listen to mediakey and sound indicator
-            MediaKeys.listen();
-            SoundIndicator.listen();
-        }
+    public static MainWindow window {public get
+    {
+        if (_window == null) _window = MainWindow.instance;
         return _window;
     }}
     private static MainWindow _window;
-
     public static Application instance {public get{
-        if (_instance == null)
+        if (_instance == null){
             _instance = new Application();
+            MediaKeys.listen();
+            SoundIndicator.listen();
+        }
         return _instance;
     }}
     private static Application _instance;
-    public signal void destroy();
+    private static bool active = false;
+
+    construct {
+        this.flags |= ApplicationFlags.HANDLES_COMMAND_LINE;
+        this.application_id = "com.github.keyndin.dlr";
+       
+    }
 
     protected override void activate () {
 
@@ -26,13 +30,10 @@ public class Application : Gtk.Application {
         //  on_dlrbutton_clicked(new Gtk.Button());
         //  player.stop();
         MainWindow.window.present();
-        Gtk.main();
+        if (!active) {active = !active; Gtk.main();};
     }
 
-    construct {
-        this.flags |= ApplicationFlags.HANDLES_COMMAND_LINE;
-        this.application_id = "com.github.keyndin.dlr";
-    }
+    
 
     public override int command_line(ApplicationCommandLine cmd) {
         string[] args = cmd.get_arguments();
@@ -51,7 +52,7 @@ public class Application : Gtk.Application {
         try {
             opt_context.parse (ref u_args);
         } catch (Error err) {
-            warning (err.message);
+            critical(err.message);
             return -1;
         }
 
@@ -59,11 +60,7 @@ public class Application : Gtk.Application {
             if (dlr) window.play_station.begin(window.dlf);
             if (nova) window.play_station.begin(window.nova);;
             if (kultur) window.play_station.begin(window.kultur);;
-            
             window.callback();
-            activate();
-            return 0;
-            //  player.play(current_station);
         }
         activate();
         return 0;
