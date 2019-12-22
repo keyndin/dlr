@@ -28,3 +28,6 @@ install_data (
     install_dir: join_paths (get_option ('datadir'), 'glib-2.0', 'schemas'),
     rename: meson.project_name () + '.gschema.xml'
 )
+
+# Refresh glib schemas
+run_command('glib-compile-schemas', '/usr/local/share/glib-2.0/schema')
