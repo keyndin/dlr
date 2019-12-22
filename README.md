@@ -66,9 +66,10 @@ To compile DLR under windows please use [MYSYS](http://www.mingw.org/wiki/MSYS) 
 * If not already installed we need to install GTK3.0 by running: ```sudo apt install gtk-3.0```
 * Next install the Vala language interpreter: ```sudo apt install valac```
 * Then install the required libraries
-  ```sudo apt-get install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio```
+  ```sudo apt-get install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio libsoup2.4-dev```
 
 ### Compile and run
 * cd into the project directory and execute ```meson build```
-* To compile the project run ```ninja -C build```
-* The project can the be executed by directly with ```./build/dlr```
+* To compile and install the project run ```ninja -C build install```
+* Install the gschemas by running ```sudo glib-compile-schemas /usr/local/share/glib-2.0/schemas/```
+* The project can then be executed by running ```com.github.keyndin.dlr```.
