@@ -71,5 +71,4 @@ To compile DLR under windows please use [MYSYS](http://www.mingw.org/wiki/MSYS) 
 ### Compile and run
 * cd into the project directory and execute ```meson build```
 * To compile and install the project run ```ninja -C build install```
-* Install the gschemas by running ```sudo glib-compile-schemas /usr/local/share/glib-2.0/schemas/```
 * The project can then be executed by running ```com.github.keyndin.dlr```.
